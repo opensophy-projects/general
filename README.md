@@ -265,7 +265,6 @@ Opensophy — это коллекция open-source ресурсов для IT-�
 
 ### ⭐ Поставьте звезду, если проект вам полезен!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=opensophy-projects/general&type=Date)](https://star-history.com/#opensophy-projects/general&Date)
 
 **[Вернуться наверх ⬆](#-opensophy)**
 

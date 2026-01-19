@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8">
     <title>Opensophy</title>
     <script>
-      // GitHub Pages SPA redirect handling
-      sessionStorage.redirect = location.href;
+      // GitHub Pages SPA routing hack
+      // This redirects 404s to the index page with a special redirect parameter
+      (function(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect) {
+          history.replaceState(null, null, redirect);
+        }
+      }());
     </script>
-    <meta http-equiv="refresh" content="0;URL='/'">
   </head>
   <body>
   </body>

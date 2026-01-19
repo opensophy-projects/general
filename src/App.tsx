@@ -20,6 +20,16 @@ function AppContent() {
   const [error, setError] = React.useState<Error | null>(null);
   const isMobile = useIsMobile();
 
+  // Handle GitHub Pages SPA redirect
+  React.useEffect(() => {
+    const redirect = sessionStorage.redirect;
+    if (redirect) {
+      sessionStorage.removeItem('redirect');
+      const url = new URL(redirect);
+      navigate(url.pathname + url.search + url.hash, { replace: true });
+    }
+  }, [navigate]);
+
   const currentPage = React.useMemo(() => {
     const path = location.pathname;
     if (path === '/') return 'general';

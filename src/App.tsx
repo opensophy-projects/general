@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useIsMobile } from './hooks/useIsMobile';
 import { cn } from './lib/utils';
 import NavBar from './components/NavBar';
@@ -10,8 +10,6 @@ const General = React.lazy(() => import('./components/pages/General'));
 const Contacts = React.lazy(() => import('./components/pages/Contacts'));
 const Menu = React.lazy(() => import('./components/Menu'));
 
-const ALLOWED_ROUTES = ['/', '/contacts'];
-
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,16 +17,6 @@ function AppContent() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
   const isMobile = useIsMobile();
-
-  // Handle GitHub Pages SPA redirect
-  React.useEffect(() => {
-    const redirect = sessionStorage.redirect;
-    if (redirect) {
-      sessionStorage.removeItem('redirect');
-      const url = new URL(redirect);
-      navigate(url.pathname + url.search + url.hash, { replace: true });
-    }
-  }, [navigate]);
 
   const currentPage = React.useMemo(() => {
     const path = location.pathname;
@@ -151,14 +139,13 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        {ALLOWED_ROUTES.map(route => (
-          <Route key={route} path={route} element={<AppContent />} />
-        ))}
+        <Route path="/" element={<AppContent />} />
+        <Route path="/contacts" element={<AppContent />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

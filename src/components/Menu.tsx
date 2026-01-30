@@ -44,7 +44,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
 
   const handleItemClick = (page: string, hasSubmenu?: boolean, setExpandedState?: React.Dispatch<React.SetStateAction<boolean>>, currentExpanded?: boolean, url?: string) => {
     if (url) {
-      window.open(url, '_blank');
+      globalThis.open(url, '_blank');
       onClose();
       setExpandedMain(false);
       setExpandedProducts(false);
@@ -58,6 +58,25 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
       setExpandedMain(false);
       setExpandedProducts(false);
     }
+  };
+
+  const getIconComponent = (item: typeof menuItems[0]) => {
+    if (item.hasSubmenu) {
+      return (
+        <motion.div
+          animate={{ rotate: item.expandedState ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ChevronDown className="w-6 h-6 sm:w-5 sm:h-5 text-black/60" />
+        </motion.div>
+      );
+    }
+    
+    if (currentPage === item.id) {
+      return <div className="w-3 h-3 sm:w-3 sm:h-3 bg-black rounded-full"></div>;
+    }
+    
+    return <ArrowRight className="w-6 h-6 sm:w-5 sm:h-5 text-black/40 transition-colors duration-300" />;
   };
 
   return (
@@ -124,18 +143,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                         <div className="text-sm sm:text-base text-black/60">{item.description}</div>
                       </div>
                       <div>
-                        {item.hasSubmenu ? (
-                          <motion.div
-                            animate={{ rotate: item.expandedState ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <ChevronDown className="w-6 h-6 sm:w-5 sm:h-5 text-black/60" />
-                          </motion.div>
-                        ) : currentPage === item.id ? (
-                          <div className="w-3 h-3 sm:w-3 sm:h-3 bg-black rounded-full"></div>
-                        ) : (
-                          <ArrowRight className="w-6 h-6 sm:w-5 sm:h-5 text-black/40 transition-colors duration-300" />
-                        )}
+                        {getIconComponent(item)}
                       </div>
                     </motion.button>
 

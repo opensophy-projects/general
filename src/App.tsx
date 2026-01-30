@@ -16,7 +16,7 @@ function AppContent() {
   const [isNegative, setIsNegative] = React.useState(true);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
-  const isMobile = useIsMobile();
+  useIsMobile();
 
   const currentPage = React.useMemo(() => {
     const path = location.pathname;
@@ -34,7 +34,7 @@ function AppContent() {
     };
     const route = routes[page];
     if (route && route.startsWith('http')) {
-      window.open(route, '_blank');
+      globalThis.open(route, '_blank');
     } else if (route) {
       navigate(route);
     }
@@ -57,8 +57,8 @@ function AppContent() {
       console.error('Global error:', event.error);
       setError(event.error);
     };
-    window.addEventListener('error', handleError);
-    return () => window.removeEventListener('error', handleError);
+    globalThis.addEventListener('error', handleError);
+    return () => globalThis.removeEventListener('error', handleError);
   }, []);
 
   if (error) {
@@ -68,7 +68,7 @@ function AppContent() {
           <h1 className="text-2xl font-bold mb-4 text-black">Something went wrong</h1>
           <p className="text-black/70 mb-4">{error.message}</p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => globalThis.location.reload()}
             className="px-6 py-2 bg-black text-white rounded-lg hover:bg-black/80"
           >
             Reload Page

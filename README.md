@@ -108,28 +108,6 @@ Opensophy — это коллекция open-source ресурсов для IT-�
 
 ---
 
-<div align="center">
-
-## 📦 Что внутри экосистемы?
-
-</div>
-
-```mermaid
-graph LR
-    A[🌟 Opensophy] --> B[📁 Open-source проекты]
-    A --> C[🎨 UI реестр - скоро ]
-    A --> D[📋 Шаблоны проектов - скоро]
-    A --> E[📚 Документация]
-    A --> F[✍️ Статьи и гайды]
-    
-    style A fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#fff
-    style B fill:#f093fb,stroke:#f5576c,stroke-width:2px
-    style C fill:#4facfe,stroke:#00f2fe,stroke-width:2px
-    style D fill:#43e97b,stroke:#38f9d7,stroke-width:2px
-    style E fill:#fa709a,stroke:#fee140,stroke-width:2px
-    style F fill:#30cfd0,stroke:#330867,stroke-width:2px
-```
-
 <table>
 <tr>
 <td width="33%" align="center">

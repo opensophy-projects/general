@@ -18,6 +18,10 @@ function cn(...classes: (string | boolean | undefined)[]) {
   return classes.filter(Boolean).join(' ');
 }
 
+const easeOutQuint = (x: number): number => {
+  return 1 - Math.pow(1 - x, 5);
+};
+
 const GlowingEffect = memo(
   ({
     blur = 0,
@@ -35,6 +39,30 @@ const GlowingEffect = memo(
     const containerRef = useRef<HTMLDivElement>(null);
     const lastPosition = useRef({ x: 0, y: 0 });
     const animationFrameRef = useRef<number>(0);
+
+    const animateAngleTransition = useCallback((
+      element: HTMLDivElement,
+      startValue: number,
+      endValue: number,
+      duration: number
+    ) => {
+      const startTime = performance.now();
+      
+      const animateValue = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutQuint(progress);
+        const value = startValue + (endValue - startValue) * easedProgress;
+        
+        element.style.setProperty("--start", String(value));
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateValue);
+        }
+      };
+
+      requestAnimationFrame(animateValue);
+    }, []);
 
     const handleMove = useCallback(
       (e?: MouseEvent | { x: number; y: number }) => {
@@ -79,7 +107,7 @@ const GlowingEffect = memo(
           if (!isActive) return;
 
           const currentAngle =
-            parseFloat(element.style.getPropertyValue("--start")) || 0;
+            Number.parseFloat(element.style.getPropertyValue("--start")) || 0;
           let targetAngle =
             (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) /
               Math.PI +
@@ -88,35 +116,11 @@ const GlowingEffect = memo(
           const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
           const newAngle = currentAngle + angleDiff;
 
-          const startValue = currentAngle;
-          const endValue = newAngle;
-          const startTime = performance.now();
           const duration = movementDuration * 1000;
-
-          const animateValue = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const easeOutQuint = (x: number): number => {
-              return 1 - Math.pow(1 - x, 5);
-            };
-            
-            const easedProgress = easeOutQuint(progress);
-            const value = startValue + (endValue - startValue) * easedProgress;
-            
-            if (element) {
-              element.style.setProperty("--start", String(value));
-            }
-            
-            if (progress < 1) {
-              requestAnimationFrame(animateValue);
-            }
-          };
-
-          requestAnimationFrame(animateValue);
+          animateAngleTransition(element, currentAngle, newAngle, duration);
         });
       },
-      [inactiveZone, proximity, movementDuration]
+      [inactiveZone, proximity, movementDuration, animateAngleTransition]
     );
 
     useEffect(() => {
@@ -125,7 +129,7 @@ const GlowingEffect = memo(
       const handleScroll = () => handleMove();
       const handlePointerMove = (e: PointerEvent) => handleMove(e);
 
-      window.addEventListener("scroll", handleScroll, { passive: true });
+      globalThis.addEventListener("scroll", handleScroll, { passive: true });
       document.body.addEventListener("pointermove", handlePointerMove, {
         passive: true,
       });
@@ -134,10 +138,34 @@ const GlowingEffect = memo(
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
         }
-        window.removeEventListener("scroll", handleScroll);
+        globalThis.removeEventListener("scroll", handleScroll);
         document.body.removeEventListener("pointermove", handlePointerMove);
       };
     }, [handleMove, disabled]);
+
+    const getGradientStyle = () => {
+      if (variant === "white") {
+        return `repeating-conic-gradient(
+                  from 236.84deg at 50% 50%,
+                  var(--black),
+                  var(--black) calc(25% / var(--repeating-conic-gradient-times))
+                )`;
+      }
+      
+      if (isNegative) {
+        return `repeating-conic-gradient(
+                  from 236.84deg at 50% 50%,
+                  #ffffff,
+                  #ffffff calc(25% / var(--repeating-conic-gradient-times))
+                )`;
+      }
+      
+      return `repeating-conic-gradient(
+                  from 236.84deg at 50% 50%,
+                  #000000,
+                  #000000 calc(25% / var(--repeating-conic-gradient-times))
+                )`;
+    };
 
     return (
       <>
@@ -159,24 +187,7 @@ const GlowingEffect = memo(
               "--active": "0",
               "--glowingeffect-border-width": `${borderWidth}px`,
               "--repeating-conic-gradient-times": "5",
-              "--gradient":
-                variant === "white"
-                  ? `repeating-conic-gradient(
-                  from 236.84deg at 50% 50%,
-                  var(--black),
-                  var(--black) calc(25% / var(--repeating-conic-gradient-times))
-                )`
-                  : isNegative
-                  ? `repeating-conic-gradient(
-                  from 236.84deg at 50% 50%,
-                  #ffffff,
-                  #ffffff calc(25% / var(--repeating-conic-gradient-times))
-                )`
-                  : `repeating-conic-gradient(
-                  from 236.84deg at 50% 50%,
-                  #000000,
-                  #000000 calc(25% / var(--repeating-conic-gradient-times))
-                )`,
+              "--gradient": getGradientStyle(),
             } as React.CSSProperties
           }
           className={cn(

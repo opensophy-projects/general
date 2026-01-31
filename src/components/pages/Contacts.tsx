@@ -53,7 +53,6 @@ const Contacts: React.FC<ContactsProps> = ({ isNegative }) => {
   ];
 
   const iconColor = isNegative ? 'text-[#E8E7E3]' : 'text-[#0a0a0a]';
-  const borderColor = isNegative ? 'border-white/10' : 'border-black/10';
 
   return (
     <div className="min-h-screen relative flex flex-col">

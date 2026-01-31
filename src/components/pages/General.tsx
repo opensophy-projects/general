@@ -16,31 +16,37 @@ interface GeneralProps {
 const General: React.FC<GeneralProps> = ({ isNegative }) => {
   const principles = [
     {
+      id: 'openness',
       icon: <Cloud className="w-6 h-6" />,
       title: "Открытость",
       description: "Все проекты и ресурсы публикуются как открытый код"
     },
     {
+      id: 'transparency',
       icon: <Eye className="w-6 h-6" />,
       title: "Прозрачность",
       description: "Чёткая документация и доступный обмен знаниями"
     },
     {
+      id: 'free-access',
       icon: <Settings className="w-6 h-6" />,
       title: "Свободный доступ",
       description: "Бесплатные решения для всех IT-специалистов"
     },
     {
+      id: 'security',
       icon: <ShieldCheck className="w-6 h-6" />,
       title: "Безопасность",
       description: "Фокус на best practices и защите данных"
     },
     {
+      id: 'ready-solutions',
       icon: <Sparkles className="w-6 h-6" />,
       title: "Готовые решения",
       description: "Шаблоны и компоненты для быстрого старта проектов"
     },
     {
+      id: 'educational',
       icon: <Layers className="w-6 h-6" />,
       title: "Образовательный контент",
       description: "Статьи, гайды и практические примеры"
@@ -139,11 +145,11 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
           <div className="absolute inset-0">
             <SingularityShaders
-              speed={1.0}
+              speed={1}
               intensity={1.2}
               size={1.1}
-              waveStrength={1.0}
-              colorShift={1.0}
+              waveStrength={1}
+              colorShift={1}
               isNegative={isNegative}
               className="h-full w-full"
             />
@@ -209,12 +215,12 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
               </motion.div>
 
               <ul className="grid grid-cols-1 grid-rows-none gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-                {principles.map((principle, index) => (
+                {principles.map((principle) => (
                   <motion.li
-                    key={index}
+                    key={principle.id}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.5 }}
                     viewport={{ once: true }}
                     className="min-h-[14rem] list-none"
                   >

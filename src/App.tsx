@@ -33,7 +33,7 @@ function AppContent() {
       docs: ''
     };
     const route = routes[page];
-    if (route && route.startsWith('http')) {
+    if (route?.startsWith('http')) {
       globalThis.open(route, '_blank');
     } else if (route) {
       navigate(route);

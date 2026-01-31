@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, forwardRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export interface SingularityShadersProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -16,8 +16,8 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
   speed = 0.1,
   intensity = 1.2,
   size = 1.1,
-  waveStrength = 1.0,
-  colorShift = 1.0,
+  waveStrength = 1,
+  colorShift = 1,
   isNegative = false,
   children,
   ...props
@@ -56,14 +56,14 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = globalThis.innerWidth;
+        canvas.height = globalThis.innerHeight;
       }, 100);
     };
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    window.addEventListener('resize', handleResize);
+    canvas.width = globalThis.innerWidth;
+    canvas.height = globalThis.innerHeight;
+    globalThis.addEventListener('resize', handleResize);
 
     const gl = canvas.getContext("webgl", { 
       preserveDrawingBuffer: false,
@@ -76,7 +76,7 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
     });
     
     if (!gl) {
-      window.removeEventListener('resize', handleResize);
+      globalThis.removeEventListener('resize', handleResize);
       return;
     }
 
@@ -152,13 +152,13 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
     const fShader = compileShader(fragmentShader, gl.FRAGMENT_SHADER);
 
     if (!vShader || !fShader) {
-      window.removeEventListener('resize', handleResize);
+      globalThis.removeEventListener('resize', handleResize);
       return;
     }
 
     const program = gl.createProgram();
     if (!program) {
-      window.removeEventListener('resize', handleResize);
+      globalThis.removeEventListener('resize', handleResize);
       return;
     }
 
@@ -168,7 +168,7 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
     
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       gl.deleteProgram(program);
-      window.removeEventListener('resize', handleResize);
+      globalThis.removeEventListener('resize', handleResize);
       return;
     }
 
@@ -220,7 +220,7 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
       gl.uniform1f(sizeLocation, config.size);
       gl.uniform1f(waveStrengthLocation, config.waveStrength);
       gl.uniform1f(colorShiftLocation, config.colorShift);
-      gl.uniform1f(isNegativeLocation, config.isNegative ? 1.0 : 0.0);
+      gl.uniform1f(isNegativeLocation, config.isNegative ? 1 : 0);
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
@@ -231,7 +231,7 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
 
     return () => {
       clearTimeout(resizeTimeout);
-      window.removeEventListener('resize', handleResize);
+      globalThis.removeEventListener('resize', handleResize);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }

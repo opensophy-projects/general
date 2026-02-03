@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun, Menu, Folder, User, X, Home, Package, ArrowUpRight, Mail } from 'lucide-react';
+import { Moon, Sun, Menu, Folder, Briefcase, X, Home, Package, ArrowUpRight, Mail } from 'lucide-react';
 
 interface NavBarProps {
   onMenuClick: () => void;
   isNegative: boolean;
   onToggleNegative: () => void;
   currentPage: string;
-  onNavigate: (page: 'general' | 'contacts' | 'hub' | 'about') => void;
+  onNavigate: (page: 'general' | 'contacts' | 'hub' | 'services') => void;
 }
 
 const NavButton: React.FC<{
@@ -113,9 +113,9 @@ const NavBar: React.FC<NavBarProps> = ({
           </a>
 
           <NavButton 
-            icon={<User className="w-5 h-5" />}
-            label="Обо мне"
-            onClick={() => handleNavigation('about')}
+            icon={<Briefcase className="w-5 h-5" />}
+            label="Услуги"
+            onClick={() => handleNavigation('services')}
             isNegative={isNegative}
           />
           <NavButton 

@@ -438,7 +438,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                             alt={casesStudies[currentCaseIndex].title}
                             className="max-h-full max-w-full object-contain"
                             style={{
-                              filter: isNegative ? 'brightness(0.9)' : 'brightness(1.1)'
+                              filter: isNegative ? 'invert(1) brightness(0.9)' : 'brightness(1.1)'
                             }}
                           />
                         </div>

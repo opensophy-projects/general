@@ -24,8 +24,8 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
     {
       id: 'transparency',
       icon: <Eye className="w-6 h-6" />,
-      title: "Прозрачность",
-      description: "Чёткая документация и доступный обмен знаниями"
+      title: "Практичность",
+      description: "Гайды и ресурсы, которые можно применить сразу"
     },
     {
       id: 'free-access',

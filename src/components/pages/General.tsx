@@ -358,7 +358,7 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
                                         : 'bg-[#e8e7e3]/60 border-black/20 text-black'
                                     }`}
                                   >
-                                    Связаться с нами
+                                    Связаться со мной
                                     <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                                   </Link>
                                 )}

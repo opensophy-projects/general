@@ -19,7 +19,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
       description: 'Основные разделы',
       submenu: [
         { id: 'general', label: 'Общая информация', description: 'О проекте Opensophy' },
-        { id: 'contacts', label: 'Контакты', description: 'Связаться с нами' },
+        { id: 'contacts', label: 'Контакты', description: 'Связаться со мной' },
         { id: 'services', label: 'Услуги', description: 'Наши услуги' }
       ]
     },

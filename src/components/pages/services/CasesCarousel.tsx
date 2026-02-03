@@ -38,11 +38,21 @@ export const CasesCarousel: React.FC<CasesCarouselProps> = ({ cases, isNegative 
   };
 
   const getDotClass = (index: number) => {
+    const isActive = index === currentIndex;
+    
+    // Extract nested ternary into separate variables
+    const activeWidth = 'w-6 sm:w-8';
+    const inactiveWidth = 'w-2 sm:w-2.5';
+    const widthClass = isActive ? activeWidth : inactiveWidth;
+    
+    const activeBgColor = isNegative ? 'bg-white' : 'bg-black';
+    const inactiveBgColor = isNegative ? 'bg-white/30' : 'bg-black/30';
+    const bgColorClass = isActive ? activeBgColor : inactiveBgColor;
+    
     return cn(
       "h-2 sm:h-2.5 rounded-full transition-all duration-300",
-      index === currentIndex
-        ? isNegative ? 'bg-white w-6 sm:w-8' : 'bg-black w-6 sm:w-8'
-        : isNegative ? 'bg-white/30 w-2 sm:w-2.5' : 'bg-black/30 w-2 sm:w-2.5'
+      bgColorClass,
+      widthClass
     );
   };
 
@@ -116,14 +126,14 @@ export const CasesCarousel: React.FC<CasesCarouselProps> = ({ cases, isNegative 
       </div>
 
       <div className="flex justify-center gap-2 mt-6 sm:mt-8">
-        {cases.map((_, index) => (
+        {cases.map((caseStudy) => (
           <motion.button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
+            key={caseStudy.id}
+            onClick={() => setCurrentIndex(cases.findIndex(c => c.id === caseStudy.id))}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
-            className={getDotClass(index)}
-            aria-label={`Показать кейс ${index + 1}`}
+            className={getDotClass(cases.findIndex(c => c.id === caseStudy.id))}
+            aria-label={`Показать кейс ${cases.findIndex(c => c.id === caseStudy.id) + 1}`}
           />
         ))}
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Cloud, Eye, Settings, ShieldCheck, Sparkles, Layers } from 'lucide-react';
+import { ArrowUpRight, Globe, Zap, ShieldCheck, TrendingUp, Sparkles, BookOpen } from 'lucide-react';
 import Footer from '../Footer';
 import { SingularityShaders } from '../SingularityShaders';
 import { GlowingEffect } from '../ui/glowing-effect';
@@ -17,37 +17,37 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
   const principles = [
     {
       id: 'openness',
-      icon: <Cloud className="w-6 h-6" />,
+      icon: <Globe className="w-6 h-6" />,
       title: "Открытость",
       description: "Фокус на open-source решениях и свободных инструментах"
     },
     {
-      id: 'transparency',
-      icon: <Eye className="w-6 h-6" />,
+      id: 'practicality',
+      icon: <Zap className="w-6 h-6" />,
       title: "Практичность",
       description: "Гайды и ресурсы, которые можно применить сразу"
-    },
-    {
-      id: 'free-access',
-      icon: <Settings className="w-6 h-6" />,
-      title: "Свободный доступ",
-      description: "Бесплатные решения для всех IT-специалистов"
     },
     {
       id: 'security',
       icon: <ShieldCheck className="w-6 h-6" />,
       title: "Безопасность",
-      description: "Фокус на best practices и защите данных"
+      description: "Best practices и фокус на защиту данных"
+    },
+    {
+      id: 'relevance',
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Актуальность",
+      description: "Современные инструменты и свежая информация"
     },
     {
       id: 'ready-solutions',
       icon: <Sparkles className="w-6 h-6" />,
       title: "Готовые решения",
-      description: "Шаблоны и компоненты для быстрого старта проектов"
+      description: "Подборки компонентов и шаблонов для быстрого старта"
     },
     {
       id: 'educational',
-      icon: <Layers className="w-6 h-6" />,
+      icon: <BookOpen className="w-6 h-6" />,
       title: "Образовательный контент",
       description: "Статьи, гайды и практические примеры"
     }

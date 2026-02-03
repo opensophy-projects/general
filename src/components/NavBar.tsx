@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Moon, Sun, Menu, Folder, User, X, Home, Package, ArrowUpRight } from 'lucide-react';
+import { Moon, Sun, Menu, Folder, User, X, Home, Package, ArrowUpRight, Mail } from 'lucide-react';
 
 interface NavBarProps {
   onMenuClick: () => void;
@@ -22,7 +22,7 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = [
     { id: 'general', label: 'Главная', description: 'Основная информация', icon: <Home className="w-5 h-5" /> },
-    { id: 'contacts', label: 'Контакты', description: 'Связаться с нами', icon: <Menu className="w-5 h-5" /> }
+    { id: 'contacts', label: 'Контакты', description: 'Связаться с нами', icon: <Mail className="w-5 h-5" /> }
   ];
 
   const projects = [
@@ -47,7 +47,7 @@ const NavBar: React.FC<NavBarProps> = ({
   }> = ({ icon, label, onClick, isActive = false }) => (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center gap-1 px-2 py-2 transition-colors ${
+      className={`flex flex-col items-center justify-center gap-1 px-3 py-2 transition-colors ${
         isActive
           ? isNegative
             ? 'text-white'
@@ -71,25 +71,21 @@ const NavBar: React.FC<NavBarProps> = ({
             : 'bg-[#E8E7E3]/95 border-black/10 backdrop-blur-sm'
         }`}
       >
-        <div className="flex items-center justify-center gap-2 px-6 py-1">
+        <div className="flex items-center justify-center gap-4 px-6 py-1">
           {/* Left side - Hamburger + Projects */}
-          <div className="flex items-center gap-2">
-            <NavButton 
-              icon={<Menu className="w-5 h-5" />}
-              label="Меню"
-              onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            />
-            <NavButton 
-              icon={<Folder className="w-5 h-5" />}
-              label="Проекты"
-              onClick={() => setIsProjectsOpen(!isProjectsOpen)} 
-            />
-          </div>
-
-          <div className={`w-px h-8 ${isNegative ? 'bg-white/20' : 'bg-black/20'}`} />
+          <NavButton 
+            icon={<Menu className="w-5 h-5" />}
+            label="Меню"
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+          />
+          <NavButton 
+            icon={<Folder className="w-5 h-5" />}
+            label="Проекты"
+            onClick={() => setIsProjectsOpen(!isProjectsOpen)} 
+          />
 
           {/* Center - Logo */}
-          <a href="/" className="flex flex-col items-center justify-center gap-1 px-4 py-2">
+          <a href="/" className="flex flex-col items-center justify-center gap-1 px-3 py-2">
             <img 
               src="/favicon.png" 
               alt="Opensophy" 
@@ -97,21 +93,17 @@ const NavBar: React.FC<NavBarProps> = ({
             />
           </a>
 
-          <div className={`w-px h-8 ${isNegative ? 'bg-white/20' : 'bg-black/20'}`} />
-
           {/* Right side - About + Theme */}
-          <div className="flex items-center gap-2">
-            <NavButton 
-              icon={<User className="w-5 h-5" />}
-              label="Обо мне"
-              onClick={() => handleNavigation('about')} 
-            />
-            <NavButton 
-              icon={isNegative ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              label="Тема"
-              onClick={onToggleNegative} 
-            />
-          </div>
+          <NavButton 
+            icon={<User className="w-5 h-5" />}
+            label="Обо мне"
+            onClick={() => handleNavigation('about')} 
+          />
+          <NavButton 
+            icon={isNegative ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            label="Тема"
+            onClick={onToggleNegative} 
+          />
         </div>
       </nav>
 
@@ -119,25 +111,25 @@ const NavBar: React.FC<NavBarProps> = ({
       <AnimatePresence>
         {isMenuOpen && (
           <div
-            className="fixed inset-0 z-[60] flex items-end pb-20"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
             onClick={() => setIsMenuOpen(false)}
           >
             <div className={`fixed inset-0 ${
               isNegative ? 'bg-black/50' : 'bg-white/50'
             } backdrop-blur-sm`} />
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className={`relative w-full max-w-md mx-auto rounded-t-2xl border-t ${
+              className={`relative w-full max-w-sm rounded-2xl border ${
                 isNegative 
                   ? 'bg-[#0a0a0a] border-white/10' 
                   : 'bg-[#E8E7E3] border-black/10'
               }`}
             >
-              <div className={`flex items-center justify-between p-4 border-b ${
+              <div className={`flex items-center justify-between p-5 border-b ${
                 isNegative ? 'border-white/10' : 'border-black/10'
               }`}>
                 <h3 className={`text-lg font-bold ${
@@ -154,24 +146,33 @@ const NavBar: React.FC<NavBarProps> = ({
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="p-4 space-y-2">
+              <div className="p-5 space-y-3">
                 {menuItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.id)}
-                    className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${
-                      isNegative
-                        ? 'text-white/70 hover:text-white active:bg-white/10'
-                        : 'text-black/70 hover:text-black active:bg-black/10'
+                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-colors text-left border ${
+                      currentPage === item.id
+                        ? isNegative
+                          ? 'bg-white/10 text-white border-white/20'
+                          : 'bg-black/10 text-black border-black/20'
+                        : isNegative
+                        ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
+                        : 'text-black/70 hover:text-black active:bg-black/5 border-black/10'
                     }`}
                   >
                     {item.icon}
-                    <div>
-                      <div className="font-semibold text-sm">{item.label}</div>
-                      <div className={`text-xs ${
+                    <div className="flex-1">
+                      <div className="font-semibold text-base">{item.label}</div>
+                      <div className={`text-xs mt-0.5 ${
                         isNegative ? 'text-white/50' : 'text-black/50'
                       }`}>{item.description}</div>
                     </div>
+                    {currentPage === item.id && (
+                      <div className={`w-2 h-2 rounded-full ${
+                        isNegative ? 'bg-white' : 'bg-black'
+                      }`} />
+                    )}
                   </button>
                 ))}
               </div>
@@ -184,25 +185,25 @@ const NavBar: React.FC<NavBarProps> = ({
       <AnimatePresence>
         {isProjectsOpen && (
           <div
-            className="fixed inset-0 z-[60] flex items-end pb-20"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
             onClick={() => setIsProjectsOpen(false)}
           >
             <div className={`fixed inset-0 ${
               isNegative ? 'bg-black/50' : 'bg-white/50'
             } backdrop-blur-sm`} />
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className={`relative w-full max-w-md mx-auto rounded-t-2xl border-t ${
+              className={`relative w-full max-w-sm rounded-2xl border ${
                 isNegative 
                   ? 'bg-[#0a0a0a] border-white/10' 
                   : 'bg-[#E8E7E3] border-black/10'
               }`}
             >
-              <div className={`flex items-center justify-between p-4 border-b ${
+              <div className={`flex items-center justify-between p-5 border-b ${
                 isNegative ? 'border-white/10' : 'border-black/10'
               }`}>
                 <h3 className={`text-lg font-bold ${
@@ -219,21 +220,21 @@ const NavBar: React.FC<NavBarProps> = ({
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="p-4 space-y-2">
+              <div className="p-5 space-y-3">
                 {projects.map((project) => (
                   <button
                     key={project.id}
                     onClick={() => handleNavigation(project.id, project.url)}
-                    className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${
+                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-colors text-left border ${
                       isNegative
-                        ? 'text-white/70 hover:text-white active:bg-white/10'
-                        : 'text-black/70 hover:text-black active:bg-black/10'
+                        ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
+                        : 'text-black/70 hover:text-black active:bg-black/5 border-black/10'
                     }`}
                   >
                     <Package className="w-5 h-5" />
                     <div className="flex-1">
-                      <div className="font-semibold text-sm">{project.label}</div>
-                      <div className={`text-xs ${
+                      <div className="font-semibold text-base">{project.label}</div>
+                      <div className={`text-xs mt-0.5 ${
                         isNegative ? 'text-white/50' : 'text-black/50'
                       }`}>{project.description}</div>
                     </div>

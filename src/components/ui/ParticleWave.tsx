@@ -13,7 +13,7 @@ export const ParticleWave = forwardRef<HTMLDivElement, ParticleWaveProps>(({
   className,
   speed = 0.5,
   noiseScale = 4.0,
-  gridSize = 10.0,
+  gridSize = 0.0,
   isNegative = false,
   children,
   ...props

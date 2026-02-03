@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Package, ArrowUpRight, Briefcase } from 'lucide-react';
+import { X, Home, Package, ArrowUpRight } from 'lucide-react';
 
 interface MenuProps {
   isOpen: boolean;

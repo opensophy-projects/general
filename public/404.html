@@ -4,14 +4,9 @@
     <meta charset="utf-8">
     <title>Opensophy</title>
     <script>
-      (function(){
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect) {
-          history.replaceState(null, null, redirect);
-        }
-      }());
+      sessionStorage.redirect = location.href;
     </script>
+    <meta http-equiv="refresh" content="0;URL='/'" />
   </head>
   <body>
   </body>

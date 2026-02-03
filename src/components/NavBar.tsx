@@ -47,7 +47,7 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = [
     { id: 'general', label: 'Главная', description: 'Основная информация', icon: <Home className="w-5 h-5" /> },
-    { id: 'contacts', label: 'Контакты', description: 'Связаться с нами', icon: <Mail className="w-5 h-5" /> }
+    { id: 'contacts', label: 'Контакты', description: 'Связаться со мной', icon: <Mail className="w-5 h-5" /> }
   ];
 
   const projects = [

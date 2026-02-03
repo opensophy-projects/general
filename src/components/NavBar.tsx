@@ -10,7 +10,6 @@ interface NavBarProps {
   onNavigate: (page: 'general' | 'contacts' | 'hub' | 'about') => void;
 }
 
-// ИСПРАВЛЕНИЕ 1: Вынесен компонент NavButton наружу
 const NavButton: React.FC<{
   icon: React.ReactNode;
   label: string;
@@ -18,7 +17,6 @@ const NavButton: React.FC<{
   isActive?: boolean;
   isNegative: boolean;
 }> = ({ icon, label, onClick, isActive = false, isNegative }) => {
-  // ИСПРАВЛЕНИЕ 2: Убран вложенный тернарный оператор
   const getTextColor = () => {
     if (isActive) {
       return isNegative ? 'text-white' : 'text-black';
@@ -29,10 +27,10 @@ const NavButton: React.FC<{
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center gap-1 px-3 py-2 transition-colors ${getTextColor()}`}
+      className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 transition-colors ${getTextColor()}`}
     >
-      <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
-      <span className="text-[10px] font-medium">{label}</span>
+      <div className="w-5 h-5 flex items-center justify-center">{icon}</div>
+      <span className="text-[9px] font-medium whitespace-nowrap">{label}</span>
     </button>
   );
 };
@@ -66,7 +64,6 @@ const NavBar: React.FC<NavBarProps> = ({
     setIsProjectsOpen(false);
   };
 
-  // ИСПРАВЛЕНИЕ 3: Функция для определения стиля кнопки меню
   const getMenuButtonStyle = (isCurrentPage: boolean) => {
     if (isCurrentPage) {
       return isNegative
@@ -78,7 +75,6 @@ const NavBar: React.FC<NavBarProps> = ({
       : 'text-black/70 hover:text-black active:bg-black/5 border-black/10';
   };
 
-  // ИСПРАВЛЕНИЕ 4: Функция для определения стиля кнопки проекта
   const getProjectButtonStyle = () => {
     return isNegative
       ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
@@ -94,7 +90,7 @@ const NavBar: React.FC<NavBarProps> = ({
             : 'bg-[#E8E7E3]/95 border-black/10 backdrop-blur-sm'
         }`}
       >
-        <div className="flex items-center justify-center gap-4 px-6 py-1">
+        <div className="flex items-center justify-around px-3 py-1">
           <NavButton 
             icon={<Menu className="w-5 h-5" />}
             label="Меню"
@@ -108,11 +104,11 @@ const NavBar: React.FC<NavBarProps> = ({
             isNegative={isNegative}
           />
 
-          <a href="/" className="flex flex-col items-center justify-center gap-1 px-3 py-2">
+          <a href="/" className="flex items-center justify-center px-2 py-1">
             <img 
               src="/favicon.png" 
               alt="Opensophy" 
-              className="w-7 h-7 object-contain" 
+              className="w-10 h-10 object-contain" 
             />
           </a>
 
@@ -131,7 +127,6 @@ const NavBar: React.FC<NavBarProps> = ({
         </div>
       </nav>
 
-      {/* ИСПРАВЛЕНИЕ 5: Убраны обработчики с внешнего div, добавлен backdrop */}
       <AnimatePresence>
         {isMenuOpen && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -199,7 +194,6 @@ const NavBar: React.FC<NavBarProps> = ({
         )}
       </AnimatePresence>
 
-      {/* ИСПРАВЛЕНИЕ 6: Убраны обработчики с внешнего div, добавлен backdrop */}
       <AnimatePresence>
         {isProjectsOpen && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">

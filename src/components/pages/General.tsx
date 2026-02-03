@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Globe, Zap, ShieldCheck, TrendingUp, Sparkles, BookOpen } from 'lucide-react';
-import Footer from '../Footer';
 import { SingularityShaders } from '../SingularityShaders';
 import { GlowingEffect } from '../ui/glowing-effect';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
@@ -98,7 +97,7 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
   const borderColor = isNegative ? 'border-white/10' : 'border-black/10';
 
   return (
-    <div className="min-h-screen relative flex flex-col">
+    <div className="min-h-screen relative flex flex-col pb-20">
       <Helmet>
         <title>Opensophy</title>
         <meta name="title" content="Opensophy" />
@@ -141,7 +140,6 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
       />
 
       <div className={`relative z-10 flex-1 ${isNegative ? 'text-white' : 'text-black'}`}>
-        {/* HERO SECTION */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
           <div className="absolute inset-0">
             <SingularityShaders
@@ -193,7 +191,6 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
           </div>
         </section>
 
-        {/* APPROACH SECTION */}
         <section className={`relative overflow-visible ${bgColor} py-12 sm:py-16 md:py-20 lg:py-28`}>
           <div className="lg:container lg:mx-auto lg:px-4 xl:px-8">
             <div className="lg:max-w-7xl lg:mx-auto px-4 sm:px-6 md:px-8">
@@ -276,12 +273,10 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
           </div>
         </section>
 
-        {/* LEARN MORE SECTION */}
         <section className={`relative overflow-visible ${bgColor} py-12 sm:py-16 md:py-20 lg:py-28`}>
           <div className="lg:container lg:mx-auto lg:px-4 xl:px-8">
             <div className="lg:max-w-7xl lg:mx-auto px-4 sm:px-6 md:px-8">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-                {/* LEFT SIDE - TITLE */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -301,7 +296,6 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
                   </div>
                 </motion.div>
 
-                {/* RIGHT SIDE - ACCORDION CARDS */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -381,8 +375,6 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
           </div>
         </section>
       </div>
-
-      <Footer isNegative={isNegative} />
     </div>
   );
 };

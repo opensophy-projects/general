@@ -1,31 +1,26 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Package, ArrowRight, ChevronRight, ChevronDown } from 'lucide-react';
+import { X, Home, Package, ArrowUpRight } from 'lucide-react';
 
 interface MenuProps {
   isOpen: boolean;
   onClose: () => void;
   currentPage: string;
-  onNavigate: (page: 'general' | 'contacts' | 'others' | 'status' | 'ui-components' | 'hub') => void;
+  onNavigate: (page: 'general' | 'contacts' | 'others' | 'status' | 'ui-components' | 'hub' | 'about') => void;
   isNegative: boolean;
 }
 
 const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, isNegative }) => {
-  const [expandedMain, setExpandedMain] = React.useState(false);
-  const [expandedProducts, setExpandedProducts] = React.useState(false);
-
   const menuItems = [
     {
-      id: 'general',
+      id: 'main',
       label: 'Главная',
       icon: <Home className="w-6 h-6" />,
       description: 'Основные разделы',
-      hasSubmenu: true,
-      expandedState: expandedMain,
-      setExpandedState: setExpandedMain,
       submenu: [
-        { id: 'general', label: 'Общая информация', description: 'Основная информация' },
-        { id: 'contacts', label: 'Контакты', description: 'Связаться с нами' }
+        { id: 'general', label: 'Общая информация', description: 'О проекте Opensophy' },
+        { id: 'contacts', label: 'Контакты', description: 'Связаться с нами' },
+        { id: 'about', label: 'Обо мне', description: 'Резюме и информация' }
       ]
     },
     {
@@ -33,50 +28,20 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
       label: 'Проекты',
       icon: <Package className="w-6 h-6" />,
       description: 'Наши проекты',
-      hasSubmenu: true,
-      expandedState: expandedProducts,
-      setExpandedState: setExpandedProducts,
       submenu: [
         { id: 'hub', label: 'Хаб', description: 'Образовательные ресурсы', url: 'https://hub.opensophy.com' }
       ]
     }
   ];
 
-  const handleItemClick = (page: string, hasSubmenu?: boolean, setExpandedState?: React.Dispatch<React.SetStateAction<boolean>>, currentExpanded?: boolean, url?: string) => {
+  const handleItemClick = (page: string, url?: string) => {
     if (url) {
-      globalThis.open(url, '_blank');
+      window.open(url, '_blank');
       onClose();
-      setExpandedMain(false);
-      setExpandedProducts(false);
       return;
     }
-    if (hasSubmenu && setExpandedState) {
-      setExpandedState(!currentExpanded);
-    } else {
-      onNavigate(page as any);
-      onClose();
-      setExpandedMain(false);
-      setExpandedProducts(false);
-    }
-  };
-
-  const getIconComponent = (item: typeof menuItems[0]) => {
-    if (item.hasSubmenu) {
-      return (
-        <motion.div
-          animate={{ rotate: item.expandedState ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ChevronDown className="w-6 h-6 sm:w-5 sm:h-5 text-black/60" />
-        </motion.div>
-      );
-    }
-    
-    if (currentPage === item.id) {
-      return <div className="w-3 h-3 sm:w-3 sm:h-3 bg-black rounded-full"></div>;
-    }
-    
-    return <ArrowRight className="w-6 h-6 sm:w-5 sm:h-5 text-black/40 transition-colors duration-300" />;
+    onNavigate(page as any);
+    onClose();
   };
 
   return (
@@ -88,120 +53,117 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 backdrop-blur-xl bg-black/30"
+            transition={{ duration: 0.3 }}
+            className={`fixed inset-0 z-40 backdrop-blur-sm ${
+              isNegative ? 'bg-black/50' : 'bg-white/50'
+            }`}
             onClick={onClose}
           />
           
-          {/* Menu content */}
+          {/* Menu content - bottom sheet */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 50 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 ${isNegative ? 'invert' : ''}`}
+            initial={{ opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '100%' }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="fixed bottom-0 left-0 right-0 z-50 pb-20"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div className={`rounded-t-2xl border-t max-h-[80vh] overflow-y-auto ${
+              isNegative 
+                ? 'bg-[#0a0a0a] border-white/10' 
+                : 'bg-[#E8E7E3] border-black/10'
+            }`}>
               {/* Header */}
-              <div className="flex items-center justify-between mb-8 sm:mb-10">
+              <div className={`sticky top-0 flex items-center justify-between p-4 border-b backdrop-blur-sm ${
+                isNegative 
+                  ? 'bg-[#0a0a0a]/95 border-white/10' 
+                  : 'bg-[#E8E7E3]/95 border-black/10'
+              }`}>
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-black mb-1">Навигация</h2>
-                  <p className="text-black/60 text-xs sm:text-sm">Выберите раздел</p>
+                  <h2 className={`text-xl font-bold ${
+                    isNegative ? 'text-white' : 'text-black'
+                  }`}>Навигация</h2>
+                  <p className={`text-xs ${
+                    isNegative ? 'text-white/50' : 'text-black/50'
+                  }`}>Выберите раздел</p>
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-2 sm:p-3 rounded-full transition-all duration-300 text-black"
+                  className={`p-2 rounded-lg transition-colors ${
+                    isNegative 
+                      ? 'text-white/70 hover:text-white active:bg-white/10' 
+                      : 'text-black/70 hover:text-black active:bg-black/10'
+                  }`}
                   aria-label="Close menu"
                 >
-                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
               
               {/* Menu items */}
-              <div className="space-y-3 sm:space-y-4">
-                {menuItems.map((item, index) => (
-                  <div key={item.id}>
-                    <motion.button
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 + 0.2, duration: 0.4 }}
-                      onClick={() => handleItemClick(item.id, item.hasSubmenu, item.setExpandedState, item.expandedState)}
-                      className={`group w-full flex items-center gap-3 sm:gap-4 p-5 sm:p-6 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black/30 relative overflow-hidden ${
-                        currentPage === item.id || (item.hasSubmenu && item.expandedState)
-                          ? 'bg-black/20 shadow-lg'
-                          : 'bg-black/5'
-                      }`}
-                    >
-                      <div className="text-black">
-                        {React.cloneElement(item.icon as React.ReactElement, {
-                          className: "w-7 h-7 sm:w-6 sm:h-6"
-                        })}
-                      </div>
-                      <div className="flex-1 text-left">
-                        <div className="font-bold text-lg sm:text-xl text-black">{item.label}</div>
-                        <div className="text-sm sm:text-base text-black/60">{item.description}</div>
-                      </div>
-                      <div>
-                        {getIconComponent(item)}
-                      </div>
-                    </motion.button>
-
-                    {/* Submenu */}
-                    <AnimatePresence>
-                      {item.hasSubmenu && item.expandedState && item.submenu && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="mt-2 sm:mt-3 space-y-2 overflow-hidden"
+              <div className="p-4 space-y-6">
+                {menuItems.map((section, index) => (
+                  <div key={section.id}>
+                    <div className={`flex items-center gap-2 mb-3 px-2 ${
+                      isNegative ? 'text-white/50' : 'text-black/50'
+                    }`}>
+                      {section.icon}
+                      <span className="text-xs font-semibold uppercase tracking-wider">
+                        {section.label}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      {section.submenu.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => handleItemClick(item.id, item.url)}
+                          className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${
+                            currentPage === item.id
+                              ? isNegative
+                                ? 'bg-white/10 text-white'
+                                : 'bg-black/10 text-black'
+                              : isNegative
+                              ? 'text-white/70 hover:text-white active:bg-white/5'
+                              : 'text-black/70 hover:text-black active:bg-black/5'
+                          }`}
                         >
-                          {item.submenu.map((subItem, subIndex) => (
-                            <motion.button
-                              key={subItem.id}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -20 }}
-                              transition={{ delay: subIndex * 0.05, duration: 0.2 }}
-                              onClick={() => handleItemClick(subItem.id, false, undefined, false, subItem.url)}
-                              className={`w-full flex items-center gap-3 sm:gap-4 p-5 sm:p-4 pl-6 sm:pl-7 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black/30 ${
-                                currentPage === subItem.id
-                                  ? 'bg-black/20'
-                                  : 'bg-black/5'
-                              }`}
-                            >
-                              <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4 text-black/40" />
-                              <div className="flex-1 text-left">
-                                <div className="font-semibold text-base sm:text-lg text-black flex items-center gap-2">
-                                  {subItem.label}
-                                </div>
-                                <div className="text-sm sm:text-xs text-black/60">{subItem.description}</div>
-                              </div>
-                              {currentPage === subItem.id && (
-                                <div className="w-2.5 h-2.5 sm:w-2 sm:h-2 bg-black rounded-full"></div>
-                              )}
-                            </motion.button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                          <div className="flex-1">
+                            <div className="font-semibold text-sm">{item.label}</div>
+                            <div className={`text-xs ${
+                              isNegative ? 'text-white/50' : 'text-black/50'
+                            }`}>{item.description}</div>
+                          </div>
+                          {item.url && (
+                            <ArrowUpRight className={`w-4 h-4 ${
+                              isNegative ? 'text-white/50' : 'text-black/40'
+                            }`} />
+                          )}
+                          {currentPage === item.id && !item.url && (
+                            <div className={`w-2 h-2 rounded-full ${
+                              isNegative ? 'bg-white' : 'bg-black'
+                            }`} />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
               
               {/* Footer */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.4 }}
-                className="mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-black/10"
-              >
+              <div className={`p-4 pt-2 border-t ${
+                isNegative ? 'border-white/10' : 'border-black/10'
+              }`}>
                 <div className="text-center">
-                  <p className="text-base sm:text-sm text-black/50 mb-2">Opensophy</p>
-                  <p className="text-sm sm:text-xs text-black/40">Open-source ресурсы для IT-специалистов</p>
+                  <p className={`text-sm font-semibold ${
+                    isNegative ? 'text-white/70' : 'text-black/70'
+                  }`}>Opensophy</p>
+                  <p className={`text-xs ${
+                    isNegative ? 'text-white/40' : 'text-black/40'
+                  }`}>Open-source проекты и ресурсы для IT</p>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         </>

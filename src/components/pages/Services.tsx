@@ -70,7 +70,8 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
     {
       id: 'n8n',
       title: 'N8N',
-      logo: 'https://n8n.io/brandguidelines/logo-dark.svg',
+      logoDark: 'https://n8n.io/brandguidelines/logo-white.svg',
+      logoLight: 'https://n8n.io/brandguidelines/logo-dark.svg',
       description: 'Публичное исследование платформы автоматизации n8n выявило потенциальные риски безопасности, связанные с типичными действиями пользователей. Работа получила положительные отзывы от сообщества и комментарии инженера проекта в официальном Discord-чате.'
     },
     {
@@ -89,6 +90,13 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
 
   const handleNextCase = () => {
     setCurrentCaseIndex((prev) => (prev === casesStudies.length - 1 ? 0 : prev + 1));
+  };
+
+  const getLogoUrl = (caseStudy: any) => {
+    if (caseStudy.logoDark && caseStudy.logoLight) {
+      return isNegative ? caseStudy.logoDark : caseStudy.logoLight;
+    }
+    return caseStudy.logo;
   };
 
   return (
@@ -394,11 +402,12 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                   onClick={handlePrevCase}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`p-2 sm:p-3 rounded-lg transition-colors ${
+                  className={cn(
+                    "p-2 sm:p-3 rounded-lg transition-all border-[0.75px]",
                     isNegative
-                      ? 'bg-white/10 hover:bg-white/20 text-white'
-                      : 'bg-black/10 hover:bg-black/20 text-black'
-                  }`}
+                      ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white'
+                      : 'bg-black/5 border-black/10 hover:bg-black/10 text-black'
+                  )}
                   aria-label="Предыдущий кейс"
                 >
                   <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -431,15 +440,12 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                         ? 'bg-[#0a0a0a] border-white/10 shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]' 
                         : 'bg-[#E8E7E3] border-black/10'
                     )}>
-                      {casesStudies[currentCaseIndex].logo ? (
+                      {(casesStudies[currentCaseIndex].logo || casesStudies[currentCaseIndex].logoDark) ? (
                         <div className="h-16 sm:h-20 flex items-center justify-center">
                           <img
-                            src={casesStudies[currentCaseIndex].logo}
+                            src={getLogoUrl(casesStudies[currentCaseIndex])}
                             alt={casesStudies[currentCaseIndex].title}
                             className="max-h-full max-w-full object-contain"
-                            style={{
-                              filter: isNegative ? 'invert(1) brightness(0.9)' : 'brightness(1.1)'
-                            }}
                           />
                         </div>
                       ) : (
@@ -475,11 +481,12 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                   onClick={handleNextCase}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`p-2 sm:p-3 rounded-lg transition-colors ${
+                  className={cn(
+                    "p-2 sm:p-3 rounded-lg transition-all border-[0.75px]",
                     isNegative
-                      ? 'bg-white/10 hover:bg-white/20 text-white'
-                      : 'bg-black/10 hover:bg-black/20 text-black'
-                  }`}
+                      ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white'
+                      : 'bg-black/5 border-black/10 hover:bg-black/10 text-black'
+                  )}
                   aria-label="Следующий кейс"
                 >
                   <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />

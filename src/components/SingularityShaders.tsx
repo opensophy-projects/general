@@ -2,22 +2,18 @@
 import React, { useEffect, useRef, forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-export interface SingularityShadersProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ParticleWaveProps extends React.HTMLAttributes<HTMLDivElement> {
   speed?: number;
-  intensity?: number;
-  size?: number;
-  waveStrength?: number;
-  colorShift?: number;
+  noiseScale?: number;
+  gridSize?: number;
   isNegative?: boolean;
 }
 
-export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersProps>(({
+export const ParticleWave = forwardRef<HTMLDivElement, ParticleWaveProps>(({
   className,
-  speed = 0.1,
-  intensity = 1.2,
-  size = 1.1,
-  waveStrength = 1,
-  colorShift = 1,
+  speed = 0.5,
+  noiseScale = 4.0,
+  gridSize = 2.0,
   isNegative = false,
   children,
   ...props
@@ -25,14 +21,14 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationIdRef = useRef<number | null>(null);
   const glContextRef = useRef<WebGLRenderingContext | null>(null);
-  const configRef = useRef({ speed, intensity, size, waveStrength, colorShift, isNegative });
+  const configRef = useRef({ speed, noiseScale, gridSize, isNegative });
   const [isAnimating, setIsAnimating] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const programRef = useRef<WebGLProgram | null>(null);
 
   useEffect(() => {
-    configRef.current = { speed, intensity, size, waveStrength, colorShift, isNegative };
-  }, [speed, intensity, size, waveStrength, colorShift, isNegative]);
+    configRef.current = { speed, noiseScale, gridSize, isNegative };
+  }, [speed, noiseScale, gridSize, isNegative]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -84,55 +80,60 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
 
     const vertexShader = `
       attribute vec2 position;
+      varying vec2 vUv;
       void main() {
+        vUv = position * 0.5 + 0.5;
         gl_Position = vec4(position, 0.0, 1.0);
       }
     `;
 
     const fragmentShader = `
-      precision lowp float;
-      uniform vec2 iResolution;
-      uniform float iTime;
+      precision highp float;
+      
+      varying vec2 vUv;
+      uniform vec2 u_resolution;
+      uniform float u_time;
       uniform float u_speed;
-      uniform float u_intensity;
-      uniform float u_size;
-      uniform float u_waveStrength;
-      uniform float u_colorShift;
-      uniform float u_isNegative;
+      uniform float u_noiseScale;
+      uniform float u_gridSize;
+      uniform vec3 u_colorShadow;
+      uniform vec3 u_colorHighlight;
 
-      void mainImage(out vec4 O, vec2 F) {
-        float i = .2 * u_speed, a;
-        vec2 r = iResolution.xy,
-             p = ( F+F - r ) / r.y / (1.5 * u_size),
-             d = vec2(-1.0, 1.0),
-             b = p - i*d,
-             c = p * mat2(1.0, 1.0, d/(.1 + i/dot(b,b))),
-             v = c * mat2(cos(.5*log(a=dot(c,c)) + iTime*i*u_speed + vec4(0.0,33.0,11.0,0.0)))/i,
-             w = vec2(0.0);
-        for(float j = 0.0; j < 9.0; j++) {
-          i++;
-          w += 1.0 + sin(v * u_waveStrength);
-          v += .7 * sin(v.yx * i + iTime * u_speed) / i + .5;
-        }
-        i = length( sin(v/.3)*.4 + c*(3.0+d) );
-        vec4 colorGrad = vec4(.6,-.4,-1.0,0.0) * u_colorShift;
-        float result = 1.0 - exp( -exp( c.x * colorGrad.x )
-                         / w.x
-                         / ( 2.0 + i*i/4.0 - i )
-                         / ( .5 + 1.0 / a )
-                         / ( .03 + abs( length(p)-.8 ) )
-                         * u_intensity
-                   );
+      float rand(vec2 p) {
+        return fract(sin(dot(p, vec2(12.543, 514.123))) * 4732.12);
+      }
+
+      float noise(vec2 p) {
+        vec2 f = smoothstep(0.0, 1.0, fract(p));
+        vec2 i = floor(p);
         
-        if (u_isNegative > 0.5) {
-          O = vec4(vec3(result), 1.0);
-        } else {
-          O = vec4(vec3(1.0 - result), 1.0);
-        }
+        float a = rand(i);
+        float b = rand(i + vec2(1.0, 0.0));
+        float c = rand(i + vec2(0.0, 1.0));
+        float d = rand(i + vec2(1.0, 1.0));
+        
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
       }
 
       void main() {
-        mainImage(gl_FragColor, gl_FragCoord.xy);
+        vec2 fragCoord = vUv * u_resolution;
+        vec2 uv = fragCoord / u_resolution.y;
+        vec2 uvp = fragCoord / u_resolution.xy;
+        
+        float timeAdjusted = u_time * u_speed;
+        
+        uv += 0.75 * noise(uv * 3.0 + timeAdjusted / 2.0 + noise(uv * 7.0 - timeAdjusted / 3.0) / 2.0) / 2.0;
+        
+        float grid = (mod(floor((uvp.x) * u_resolution.x / u_gridSize), 2.0) == 0.0 ? 1.0 : 0.0) *
+                     (mod(floor((uvp.y) * u_resolution.y / u_gridSize), 2.0) == 0.0 ? 1.0 : 0.0);
+        
+        vec3 col = mix(u_colorShadow, u_colorHighlight,
+                       5.0 * vec3(pow(1.0 - noise(uv * u_noiseScale - vec2(0.0, timeAdjusted / 2.0)), 5.0)));
+        
+        col = pow(col, vec3(1.0));
+        
+        float alpha = grid;
+        gl_FragColor = vec4(col, alpha);
       }
     `;
 
@@ -142,6 +143,7 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
       gl!.shaderSource(shader, source);
       gl!.compileShader(shader);
       if (!gl!.getShaderParameter(shader, gl!.COMPILE_STATUS)) {
+        console.error('Shader compile error:', gl!.getShaderInfoLog(shader));
         gl!.deleteShader(shader);
         return null;
       }
@@ -167,6 +169,7 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
     gl.linkProgram(program);
     
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
       gl.deleteProgram(program);
       globalThis.removeEventListener('resize', handleResize);
       return;
@@ -183,17 +186,16 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-    const iResolutionLocation = gl.getUniformLocation(program, "iResolution");
-    const iTimeLocation = gl.getUniformLocation(program, "iTime");
+    const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+    const timeLocation = gl.getUniformLocation(program, "u_time");
     const speedLocation = gl.getUniformLocation(program, "u_speed");
-    const intensityLocation = gl.getUniformLocation(program, "u_intensity");
-    const sizeLocation = gl.getUniformLocation(program, "u_size");
-    const waveStrengthLocation = gl.getUniformLocation(program, "u_waveStrength");
-    const colorShiftLocation = gl.getUniformLocation(program, "u_colorShift");
-    const isNegativeLocation = gl.getUniformLocation(program, "u_isNegative");
+    const noiseScaleLocation = gl.getUniformLocation(program, "u_noiseScale");
+    const gridSizeLocation = gl.getUniformLocation(program, "u_gridSize");
+    const colorShadowLocation = gl.getUniformLocation(program, "u_colorShadow");
+    const colorHighlightLocation = gl.getUniformLocation(program, "u_colorHighlight");
 
     let startTime = Date.now();
-    const targetFPS = 20;
+    const targetFPS = 30;
     const frameInterval = 1000 / targetFPS;
     let lastFrameTime = 0;
 
@@ -213,14 +215,22 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
       const config = configRef.current;
       const time = (Date.now() - startTime) / 1000;
 
-      gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
-      gl.uniform1f(iTimeLocation, time);
+      // Color palettes
+      const darkShadow = [0.035, 0.035, 0.043];
+      const darkHighlight = [0.055, 0.059, 0.075];
+      const lightShadow = [0.98, 0.98, 0.988];
+      const lightHighlight = [0.9, 0.9, 0.91];
+
+      const colorShadow = config.isNegative ? darkShadow : lightShadow;
+      const colorHighlight = config.isNegative ? darkHighlight : lightHighlight;
+
+      gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+      gl.uniform1f(timeLocation, time);
       gl.uniform1f(speedLocation, config.speed);
-      gl.uniform1f(intensityLocation, config.intensity);
-      gl.uniform1f(sizeLocation, config.size);
-      gl.uniform1f(waveStrengthLocation, config.waveStrength);
-      gl.uniform1f(colorShiftLocation, config.colorShift);
-      gl.uniform1f(isNegativeLocation, config.isNegative ? 1 : 0);
+      gl.uniform1f(noiseScaleLocation, config.noiseScale);
+      gl.uniform1f(gridSizeLocation, config.gridSize);
+      gl.uniform3f(colorShadowLocation, colorShadow[0], colorShadow[1], colorShadow[2]);
+      gl.uniform3f(colorHighlightLocation, colorHighlight[0], colorHighlight[1], colorHighlight[2]);
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
@@ -235,7 +245,9 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
-      gl.deleteProgram(program);
+      if (program) {
+        gl.deleteProgram(program);
+      }
     };
   }, [isAnimating]);
 
@@ -255,4 +267,4 @@ export const SingularityShaders = forwardRef<HTMLDivElement, SingularityShadersP
   );
 });
 
-SingularityShaders.displayName = "SingularityShaders";
+ParticleWave.displayName = "ParticleWave";

@@ -5,9 +5,13 @@
     <title>Opensophy</title>
     <script>
       sessionStorage.redirect = location.href;
+      location.replace('/');
     </script>
-    <meta http-equiv="refresh" content="0;URL='/'" />
+    <noscript>
+      <meta http-equiv="refresh" content="0;URL='/'" />
+    </noscript>
   </head>
   <body>
+    <p>Перенаправление... <a href="/">Нажмите здесь, если перенаправление не работает</a></p>
   </body>
 </html>

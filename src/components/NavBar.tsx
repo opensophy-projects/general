@@ -10,6 +10,33 @@ interface NavBarProps {
   onNavigate: (page: 'general' | 'contacts' | 'hub' | 'about') => void;
 }
 
+// ИСПРАВЛЕНИЕ 1: Вынесен компонент NavButton наружу
+const NavButton: React.FC<{
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  isActive?: boolean;
+  isNegative: boolean;
+}> = ({ icon, label, onClick, isActive = false, isNegative }) => {
+  // ИСПРАВЛЕНИЕ 2: Убран вложенный тернарный оператор
+  const getTextColor = () => {
+    if (isActive) {
+      return isNegative ? 'text-white' : 'text-black';
+    }
+    return isNegative ? 'text-white/60 hover:text-white' : 'text-black/60 hover:text-black';
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center justify-center gap-1 px-3 py-2 transition-colors ${getTextColor()}`}
+    >
+      <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+      <span className="text-[10px] font-medium">{label}</span>
+    </button>
+  );
+};
+
 const NavBar: React.FC<NavBarProps> = ({
   onMenuClick,
   isNegative,
@@ -39,28 +66,24 @@ const NavBar: React.FC<NavBarProps> = ({
     setIsProjectsOpen(false);
   };
 
-  const NavButton: React.FC<{
-    icon: React.ReactNode;
-    label: string;
-    onClick: () => void;
-    isActive?: boolean;
-  }> = ({ icon, label, onClick, isActive = false }) => (
-    <button
-      onClick={onClick}
-      className={`flex flex-col items-center justify-center gap-1 px-3 py-2 transition-colors ${
-        isActive
-          ? isNegative
-            ? 'text-white'
-            : 'text-black'
-          : isNegative
-          ? 'text-white/60 hover:text-white'
-          : 'text-black/60 hover:text-black'
-      }`}
-    >
-      <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
-      <span className="text-[10px] font-medium">{label}</span>
-    </button>
-  );
+  // ИСПРАВЛЕНИЕ 3: Функция для определения стиля кнопки меню
+  const getMenuButtonStyle = (isCurrentPage: boolean) => {
+    if (isCurrentPage) {
+      return isNegative
+        ? 'bg-white/10 text-white border-white/20'
+        : 'bg-black/10 text-black border-black/20';
+    }
+    return isNegative
+      ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
+      : 'text-black/70 hover:text-black active:bg-black/5 border-black/10';
+  };
+
+  // ИСПРАВЛЕНИЕ 4: Функция для определения стиля кнопки проекта
+  const getProjectButtonStyle = () => {
+    return isNegative
+      ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
+      : 'text-black/70 hover:text-black active:bg-black/5 border-black/10';
+  };
 
   return (
     <>
@@ -72,19 +95,19 @@ const NavBar: React.FC<NavBarProps> = ({
         }`}
       >
         <div className="flex items-center justify-center gap-4 px-6 py-1">
-          {/* Left side - Hamburger + Projects */}
           <NavButton 
             icon={<Menu className="w-5 h-5" />}
             label="Меню"
-            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            isNegative={isNegative}
           />
           <NavButton 
             icon={<Folder className="w-5 h-5" />}
             label="Проекты"
-            onClick={() => setIsProjectsOpen(!isProjectsOpen)} 
+            onClick={() => setIsProjectsOpen(!isProjectsOpen)}
+            isNegative={isNegative}
           />
 
-          {/* Center - Logo */}
           <a href="/" className="flex flex-col items-center justify-center gap-1 px-3 py-2">
             <img 
               src="/favicon.png" 
@@ -93,36 +116,38 @@ const NavBar: React.FC<NavBarProps> = ({
             />
           </a>
 
-          {/* Right side - About + Theme */}
           <NavButton 
             icon={<User className="w-5 h-5" />}
             label="Обо мне"
-            onClick={() => handleNavigation('about')} 
+            onClick={() => handleNavigation('about')}
+            isNegative={isNegative}
           />
           <NavButton 
             icon={isNegative ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             label="Тема"
-            onClick={onToggleNegative} 
+            onClick={onToggleNegative}
+            isNegative={isNegative}
           />
         </div>
       </nav>
 
-      {/* Hamburger Menu Modal */}
+      {/* ИСПРАВЛЕНИЕ 5: Убраны обработчики с внешнего div, добавлен backdrop */}
       <AnimatePresence>
         {isMenuOpen && (
-          <div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <div className={`fixed inset-0 ${
-              isNegative ? 'bg-black/50' : 'bg-white/50'
-            } backdrop-blur-sm`} />
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <div 
+              className={`fixed inset-0 ${isNegative ? 'bg-black/50' : 'bg-white/50'} backdrop-blur-sm`}
+              onClick={() => setIsMenuOpen(false)}
+              aria-hidden="true"
+            />
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="menu-modal-title"
               className={`relative w-full max-w-sm rounded-2xl border ${
                 isNegative 
                   ? 'bg-[#0a0a0a] border-white/10' 
@@ -132,7 +157,7 @@ const NavBar: React.FC<NavBarProps> = ({
               <div className={`flex items-center justify-between p-5 border-b ${
                 isNegative ? 'border-white/10' : 'border-black/10'
               }`}>
-                <h3 className={`text-lg font-bold ${
+                <h3 id="menu-modal-title" className={`text-lg font-bold ${
                   isNegative ? 'text-white' : 'text-black'
                 }`}>Навигация</h3>
                 <button 
@@ -142,6 +167,7 @@ const NavBar: React.FC<NavBarProps> = ({
                       ? 'text-white/70 hover:text-white active:bg-white/10' 
                       : 'text-black/70 hover:text-black active:bg-black/10'
                   }`}
+                  aria-label="Закрыть меню"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -151,15 +177,7 @@ const NavBar: React.FC<NavBarProps> = ({
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.id)}
-                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-colors text-left border ${
-                      currentPage === item.id
-                        ? isNegative
-                          ? 'bg-white/10 text-white border-white/20'
-                          : 'bg-black/10 text-black border-black/20'
-                        : isNegative
-                        ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
-                        : 'text-black/70 hover:text-black active:bg-black/5 border-black/10'
-                    }`}
+                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-colors text-left border ${getMenuButtonStyle(currentPage === item.id)}`}
                   >
                     {item.icon}
                     <div className="flex-1">
@@ -181,22 +199,23 @@ const NavBar: React.FC<NavBarProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Projects Modal */}
+      {/* ИСПРАВЛЕНИЕ 6: Убраны обработчики с внешнего div, добавлен backdrop */}
       <AnimatePresence>
         {isProjectsOpen && (
-          <div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-            onClick={() => setIsProjectsOpen(false)}
-          >
-            <div className={`fixed inset-0 ${
-              isNegative ? 'bg-black/50' : 'bg-white/50'
-            } backdrop-blur-sm`} />
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <div 
+              className={`fixed inset-0 ${isNegative ? 'bg-black/50' : 'bg-white/50'} backdrop-blur-sm`}
+              onClick={() => setIsProjectsOpen(false)}
+              aria-hidden="true"
+            />
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="projects-modal-title"
               className={`relative w-full max-w-sm rounded-2xl border ${
                 isNegative 
                   ? 'bg-[#0a0a0a] border-white/10' 
@@ -206,7 +225,7 @@ const NavBar: React.FC<NavBarProps> = ({
               <div className={`flex items-center justify-between p-5 border-b ${
                 isNegative ? 'border-white/10' : 'border-black/10'
               }`}>
-                <h3 className={`text-lg font-bold ${
+                <h3 id="projects-modal-title" className={`text-lg font-bold ${
                   isNegative ? 'text-white' : 'text-black'
                 }`}>Проекты</h3>
                 <button 
@@ -216,6 +235,7 @@ const NavBar: React.FC<NavBarProps> = ({
                       ? 'text-white/70 hover:text-white active:bg-white/10' 
                       : 'text-black/70 hover:text-black active:bg-black/10'
                   }`}
+                  aria-label="Закрыть проекты"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -225,11 +245,7 @@ const NavBar: React.FC<NavBarProps> = ({
                   <button
                     key={project.id}
                     onClick={() => handleNavigation(project.id, project.url)}
-                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-colors text-left border ${
-                      isNegative
-                        ? 'text-white/70 hover:text-white active:bg-white/5 border-white/10'
-                        : 'text-black/70 hover:text-black active:bg-black/5 border-black/10'
-                    }`}
+                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl transition-colors text-left border ${getProjectButtonStyle()}`}
                   >
                     <Package className="w-5 h-5" />
                     <div className="flex-1">

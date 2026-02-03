@@ -64,14 +64,11 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
     {
       id: 'bolt',
       title: 'Bolt.new',
-      logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Bolt.new_logoo.png',
       description: 'Обнаружена критическая логическая уязвимость, позволяющая обходить ограничения использования AI-токенов. Уязвимость была ответственно раскрыта команде проекта'
     },
     {
       id: 'n8n',
       title: 'N8N',
-      logoDark: 'https://n8n.io/brandguidelines/logo-white.svg',
-      logoLight: 'https://n8n.io/brandguidelines/logo-dark.svg',
       description: 'Публичное исследование платформы автоматизации n8n выявило потенциальные риски безопасности, связанные с типичными действиями пользователей. Работа получила положительные отзывы от сообщества и комментарии инженера проекта в официальном Discord-чате.'
     },
     {
@@ -90,13 +87,6 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
 
   const handleNextCase = () => {
     setCurrentCaseIndex((prev) => (prev === casesStudies.length - 1 ? 0 : prev + 1));
-  };
-
-  const getLogoUrl = (caseStudy: any) => {
-    if (caseStudy.logoDark && caseStudy.logoLight) {
-      return isNegative ? caseStudy.logoDark : caseStudy.logoLight;
-    }
-    return caseStudy.logo;
   };
 
   return (
@@ -440,25 +430,6 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                         ? 'bg-[#0a0a0a] border-white/10 shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]' 
                         : 'bg-[#E8E7E3] border-black/10'
                     )}>
-                      {(casesStudies[currentCaseIndex].logo || casesStudies[currentCaseIndex].logoDark) ? (
-                        <div className="h-16 sm:h-20 flex items-center justify-center">
-                          <img
-                            src={getLogoUrl(casesStudies[currentCaseIndex])}
-                            alt={casesStudies[currentCaseIndex].title}
-                            className="max-h-full max-w-full object-contain"
-                          />
-                        </div>
-                      ) : (
-                        <div className={cn(
-                          "h-16 sm:h-20 flex items-center justify-center rounded-lg border-[0.75px] font-semibold text-xl sm:text-2xl",
-                          isNegative 
-                            ? 'bg-white/5 border-white/10 text-white/70' 
-                            : 'bg-black/5 border-black/10 text-black/70'
-                        )}>
-                          {casesStudies[currentCaseIndex].title}
-                        </div>
-                      )}
-                      
                       <div className="space-y-4">
                         <h3 className={cn(
                           "text-2xl sm:text-3xl font-bold",

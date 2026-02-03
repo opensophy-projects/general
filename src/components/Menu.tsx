@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Package, ArrowUpRight } from 'lucide-react';
+import { X, Home, Package, ArrowUpRight, Briefcase } from 'lucide-react';
 
 interface MenuProps {
   isOpen: boolean;
   onClose: () => void;
   currentPage: string;
-  onNavigate: (page: 'general' | 'contacts' | 'others' | 'status' | 'ui-components' | 'hub' | 'about') => void;
+  onNavigate: (page: 'general' | 'contacts' | 'services' | 'others' | 'status' | 'ui-components' | 'hub' | 'about') => void;
   isNegative: boolean;
 }
 
@@ -20,7 +20,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
       submenu: [
         { id: 'general', label: 'Общая информация', description: 'О проекте Opensophy' },
         { id: 'contacts', label: 'Контакты', description: 'Связаться с нами' },
-        { id: 'about', label: 'Обо мне', description: 'Резюме и информация' }
+        { id: 'services', label: 'Услуги', description: 'Наши услуги' }
       ]
     },
     {
@@ -44,7 +44,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
     onClose();
   };
 
-  // ИСПРАВЛЕНИЕ: Функция для определения стиля кнопки меню
   const getMenuItemStyle = (isCurrentPage: boolean) => {
     if (isCurrentPage) {
       return isNegative ? 'bg-white/10 text-white' : 'bg-black/10 text-black';
@@ -58,7 +57,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop with blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -71,7 +69,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
             aria-hidden="true"
           />
           
-          {/* Menu content - bottom sheet */}
           <motion.div
             initial={{ opacity: 0, y: '100%' }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,7 +84,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                 ? 'bg-[#0a0a0a] border-white/10' 
                 : 'bg-[#E8E7E3] border-black/10'
             }`}>
-              {/* Header */}
               <div className={`sticky top-0 flex items-center justify-between p-4 border-b backdrop-blur-sm ${
                 isNegative 
                   ? 'bg-[#0a0a0a]/95 border-white/10' 
@@ -114,7 +110,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                 </button>
               </div>
               
-              {/* Menu items */}
               <div className="p-4 space-y-6">
                 {menuItems.map((section) => (
                   <div key={section.id}>
@@ -156,7 +151,6 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                 ))}
               </div>
               
-              {/* Footer */}
               <div className={`p-4 pt-2 border-t ${
                 isNegative ? 'border-white/10' : 'border-black/10'
               }`}>

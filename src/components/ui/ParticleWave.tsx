@@ -11,7 +11,7 @@ export interface ParticleWaveProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export const ParticleWave = forwardRef<HTMLDivElement, ParticleWaveProps>(({
   className,
-  speed = 0.5,
+  speed = 5.5,
   noiseScale = 4.0,
   gridSize = 1.0,
   isNegative = false,

@@ -47,7 +47,7 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = [
     { id: 'general', label: 'Главная', description: 'Основная информация', icon: <Home className="w-5 h-5" /> },
-    { id: 'contacts', label: 'Контакты', description: 'Связаться со мной', icon: <Mail className="w-5 h-5" /> }
+    { id: 'contacts', label: 'Контакты', description: 'Связаться с нами', icon: <Mail className="w-5 h-5" /> }
   ];
 
   const projects = [
@@ -104,13 +104,13 @@ const NavBar: React.FC<NavBarProps> = ({
             isNegative={isNegative}
           />
 
-          <a href="/" className="flex items-center justify-center px-2 py-1">
+          <div className="flex items-center justify-center px-2 py-1">
             <img 
               src="/favicon.png" 
               alt="Opensophy" 
               className="w-10 h-10 object-contain" 
             />
-          </a>
+          </div>
 
           <NavButton 
             icon={<Briefcase className="w-5 h-5" />}

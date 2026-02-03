@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Shield, Code, Globe, Palette, TestTube, Search } from 'lucide-react';
+import { Shield, Code, Globe, Palette, TestTube, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GlowingEffect } from '../ui/glowing-effect';
 import { cn } from '@/lib/utils';
 
@@ -10,6 +10,8 @@ interface ServicesProps {
 }
 
 const Services: React.FC<ServicesProps> = ({ isNegative }) => {
+  const [currentCaseIndex, setCurrentCaseIndex] = useState(0);
+
   const securityServices = [
     {
       id: 'leak-check',
@@ -58,8 +60,36 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
     }
   ];
 
+  const casesStudies = [
+    {
+      id: 'bolt',
+      title: 'Bolt.new',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Bolt.new_logoo.png',
+      description: 'Обнаружена критическая логическая уязвимость, позволяющая обходить ограничения использования AI-токенов. Уязвимость была ответственно раскрыта команде проекта'
+    },
+    {
+      id: 'n8n',
+      title: 'N8N',
+      logo: 'https://n8n.io/brandguidelines/logo-dark.svg',
+      description: 'Публичное исследование платформы автоматизации n8n выявило потенциальные риски безопасности, связанные с типичными действиями пользователей. Работа получила положительные отзывы от сообщества и комментарии инженера проекта в официальном Discord-чате.'
+    },
+    {
+      id: 'kondor',
+      title: 'Кондор',
+      description: 'Полная переработка интернет-платформы с оптимизацией дизайна и современными технологиями. Обновленный сайт обеспечивает лучший пользовательский опыт и повышенную производительность.'
+    }
+  ];
+
   const borderColor = isNegative ? 'border-white/10' : 'border-black/10';
   const iconColor = isNegative ? 'text-[#E8E7E3]' : 'text-[#0a0a0a]';
+
+  const handlePrevCase = () => {
+    setCurrentCaseIndex((prev) => (prev === 0 ? casesStudies.length - 1 : prev - 1));
+  };
+
+  const handleNextCase = () => {
+    setCurrentCaseIndex((prev) => (prev === casesStudies.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <div className="min-h-screen relative flex flex-col pb-20">
@@ -334,6 +364,146 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                 </a>
               </div>
             </motion.div>
+          </div>
+        </section>
+
+        <section className={`py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8`}>
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mb-12 sm:mb-16"
+            >
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
+                isNegative ? 'text-white' : 'text-black'
+              }`}>
+                Примеры наших кейсов
+              </h2>
+              <p className={`text-base sm:text-lg leading-relaxed ${
+                isNegative ? 'text-white/60' : 'text-black/60'
+              }`}>
+                Здесь представлены как независимые исследования, так и клиентские проекты.
+              </p>
+            </motion.div>
+
+            <div className="relative">
+              <div className="flex items-center justify-center gap-4 sm:gap-6">
+                <motion.button
+                  onClick={handlePrevCase}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`p-2 sm:p-3 rounded-lg transition-colors ${
+                    isNegative
+                      ? 'bg-white/10 hover:bg-white/20 text-white'
+                      : 'bg-black/10 hover:bg-black/20 text-black'
+                  }`}
+                  aria-label="Предыдущий кейс"
+                >
+                  <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                </motion.button>
+
+                <motion.div
+                  key={currentCaseIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-1 max-w-2xl"
+                >
+                  <div className={cn(
+                    "relative rounded-[1.25rem] border-[0.75px] p-2 md:rounded-[1.5rem] md:p-3",
+                    borderColor
+                  )}>
+                    <GlowingEffect
+                      spread={40}
+                      glow={true}
+                      disabled={false}
+                      proximity={64}
+                      inactiveZone={0.01}
+                      borderWidth={3}
+                      isNegative={isNegative}
+                    />
+                    <div className={cn(
+                      "relative flex flex-col gap-8 overflow-hidden rounded-xl border-[0.75px] p-6 sm:p-8 md:p-10 shadow-sm",
+                      isNegative 
+                        ? 'bg-[#0a0a0a] border-white/10 shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]' 
+                        : 'bg-[#E8E7E3] border-black/10'
+                    )}>
+                      {casesStudies[currentCaseIndex].logo ? (
+                        <div className="h-16 sm:h-20 flex items-center justify-center">
+                          <img
+                            src={casesStudies[currentCaseIndex].logo}
+                            alt={casesStudies[currentCaseIndex].title}
+                            className="max-h-full max-w-full object-contain"
+                            style={{
+                              filter: isNegative ? 'brightness(0.9)' : 'brightness(1.1)'
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className={cn(
+                          "h-16 sm:h-20 flex items-center justify-center rounded-lg border-[0.75px] font-semibold text-xl sm:text-2xl",
+                          isNegative 
+                            ? 'bg-white/5 border-white/10 text-white/70' 
+                            : 'bg-black/5 border-black/10 text-black/70'
+                        )}>
+                          {casesStudies[currentCaseIndex].title}
+                        </div>
+                      )}
+                      
+                      <div className="space-y-4">
+                        <h3 className={cn(
+                          "text-2xl sm:text-3xl font-bold",
+                          isNegative ? 'text-white' : 'text-black'
+                        )}>
+                          {casesStudies[currentCaseIndex].title}
+                        </h3>
+                        <p className={cn(
+                          "text-base sm:text-lg leading-relaxed",
+                          isNegative ? 'text-white/70' : 'text-black/70'
+                        )}>
+                          {casesStudies[currentCaseIndex].description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.button
+                  onClick={handleNextCase}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`p-2 sm:p-3 rounded-lg transition-colors ${
+                    isNegative
+                      ? 'bg-white/10 hover:bg-white/20 text-white'
+                      : 'bg-black/10 hover:bg-black/20 text-black'
+                  }`}
+                  aria-label="Следующий кейс"
+                >
+                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                </motion.button>
+              </div>
+
+              <div className="flex justify-center gap-2 mt-6 sm:mt-8">
+                {casesStudies.map((_, index) => (
+                  <motion.button
+                    key={index}
+                    onClick={() => setCurrentCaseIndex(index)}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                    className={cn(
+                      "h-2 sm:h-2.5 rounded-full transition-all duration-300",
+                      index === currentCaseIndex
+                        ? isNegative ? 'bg-white w-6 sm:w-8' : 'bg-black w-6 sm:w-8'
+                        : isNegative ? 'bg-white/30 w-2 sm:w-2.5' : 'bg-black/30 w-2 sm:w-2.5'
+                    )}
+                    aria-label={`Показать кейс ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </div>

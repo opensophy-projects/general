@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Shield, Code, Globe, Palette, TestTube, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import { GlowingEffect } from '../ui/glowing-effect';
-import { cn } from '@/lib/utils';
+import { Shield, Code, Globe, Palette, TestTube, Search } from 'lucide-react';
+import { ServiceCard } from './services/ServiceCard';
+import { ContactButtons } from './services/ContactButtons';
+import { CasesCarousel } from './services/CasesCarousel';
 
 interface ServicesProps {
   isNegative: boolean;
 }
 
 const Services: React.FC<ServicesProps> = ({ isNegative }) => {
-  const [currentCaseIndex, setCurrentCaseIndex] = useState(0);
-
   const securityServices = [
     {
       id: 'leak-check',
@@ -78,16 +77,9 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
     }
   ];
 
-  const borderColor = isNegative ? 'border-white/10' : 'border-black/10';
-  const iconColor = isNegative ? 'text-[#E8E7E3]' : 'text-[#0a0a0a]';
-
-  const handlePrevCase = () => {
-    setCurrentCaseIndex((prev) => (prev === 0 ? casesStudies.length - 1 : prev - 1));
-  };
-
-  const handleNextCase = () => {
-    setCurrentCaseIndex((prev) => (prev === casesStudies.length - 1 ? 0 : prev + 1));
-  };
+  const textColor = isNegative ? 'text-white' : 'text-black';
+  const mutedTextColor = isNegative ? 'text-white/60' : 'text-black/60';
+  const lightTextColor = isNegative ? 'text-white/70' : 'text-black/70';
 
   return (
     <div className="min-h-screen relative flex flex-col pb-20">
@@ -115,53 +107,28 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
         }`}
       />
 
-      <div className={`relative z-10 flex-1 ${isNegative ? 'text-white' : 'text-black'}`}>
-        <section className={`py-20 sm:py-24 md:py-32 lg:py-40 px-4 sm:px-6 md:px-8`}>
+      <div className={`relative z-10 flex-1 ${textColor}`}>
+        <section className="py-20 sm:py-24 md:py-32 lg:py-40 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 sm:mb-8 ${
-                isNegative ? 'text-white' : 'text-black'
-              } font-veilstack tracking-wider`}>
+              <h1 className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 sm:mb-8 ${textColor} font-veilstack tracking-wider`}>
                 Услуги
               </h1>
-              <p className={`text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl ${
-                isNegative ? 'text-white/70' : 'text-black/70'
-              }`}>
+              <p className={`text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl ${lightTextColor}`}>
                 Профессиональные услуги в области кибербезопасности и разработки. Все цены обсуждаются индивидуально в зависимости от сложности проекта.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  href="mailto:opensophy@gmail.com"
-                  className={`inline-flex items-center gap-2 px-6 py-3 backdrop-blur-2xl border rounded-lg transition-all duration-300 font-semibold hover:scale-105 ${
-                    isNegative
-                      ? 'bg-[#0a0a0a]/60 border-white/20 text-white hover:bg-white/10'
-                      : 'bg-[#e8e7e3]/60 border-black/20 text-black hover:bg-black/10'
-                  }`}
-                >
-                  Написать на Email
-                </a>
-                <a
-                  href="https://t.me/veilosophy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-2 px-6 py-3 backdrop-blur-2xl border rounded-lg transition-all duration-300 font-semibold hover:scale-105 ${
-                    isNegative
-                      ? 'bg-[#0a0a0a]/60 border-white/20 text-white hover:bg-white/10'
-                      : 'bg-[#e8e7e3]/60 border-black/20 text-black hover:bg-black/10'
-                  }`}
-                >
-                  Написать в Telegram
-                </a>
+              <div className="mt-8">
+                <ContactButtons isNegative={isNegative} />
               </div>
             </motion.div>
           </div>
         </section>
 
-        <section className={`py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8`}>
+        <section className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -170,14 +137,10 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
               viewport={{ once: true }}
               className="mb-12 sm:mb-16"
             >
-              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
-                isNegative ? 'text-white' : 'text-black'
-              }`}>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${textColor}`}>
                 Кибербезопасность
               </h2>
-              <p className={`text-base sm:text-lg leading-relaxed ${
-                isNegative ? 'text-white/60' : 'text-black/60'
-              }`}>
+              <p className={`text-base sm:text-lg leading-relaxed ${mutedTextColor}`}>
                 Защита ваших данных и систем от угроз
               </p>
             </motion.div>
@@ -191,56 +154,19 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className={cn(
-                    "relative h-full rounded-[1.25rem] border-[0.75px] p-2 md:rounded-[1.5rem] md:p-3",
-                    borderColor
-                  )}>
-                    <GlowingEffect
-                      spread={40}
-                      glow={true}
-                      disabled={false}
-                      proximity={64}
-                      inactiveZone={0.01}
-                      borderWidth={3}
-                      isNegative={isNegative}
-                    />
-                    <div className={cn(
-                      "relative flex h-full flex-col gap-6 overflow-hidden rounded-xl border-[0.75px] p-6 shadow-sm md:p-8",
-                      isNegative 
-                        ? 'bg-[#0a0a0a] border-white/10 shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]' 
-                        : 'bg-[#E8E7E3] border-black/10'
-                    )}>
-                      <div className={cn(
-                        "w-fit rounded-lg border-[0.75px] p-3",
-                        isNegative ? 'border-white/20 bg-white/5' : 'border-black/20 bg-black/5'
-                      )}>
-                        <div className={iconColor}>
-                          {service.icon}
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <h3 className={cn(
-                          "text-xl sm:text-2xl font-semibold leading-tight",
-                          isNegative ? 'text-white' : 'text-black'
-                        )}>
-                          {service.title}
-                        </h3>
-                        <p className={cn(
-                          "text-sm sm:text-base leading-relaxed",
-                          isNegative ? 'text-white/70' : 'text-black/70'
-                        )}>
-                          {service.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <ServiceCard
+                    icon={service.icon}
+                    title={service.title}
+                    description={service.description}
+                    isNegative={isNegative}
+                  />
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className={`py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8`}>
+        <section className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -249,14 +175,10 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
               viewport={{ once: true }}
               className="mb-12 sm:mb-16"
             >
-              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
-                isNegative ? 'text-white' : 'text-black'
-              }`}>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${textColor}`}>
                 Разработка и Дизайн
               </h2>
-              <p className={`text-base sm:text-lg leading-relaxed ${
-                isNegative ? 'text-white/60' : 'text-black/60'
-              }`}>
+              <p className={`text-base sm:text-lg leading-relaxed ${mutedTextColor}`}>
                 Создание качественных цифровых продуктов
               </p>
             </motion.div>
@@ -270,56 +192,19 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className={cn(
-                    "relative h-full rounded-[1.25rem] border-[0.75px] p-2 md:rounded-[1.5rem] md:p-3",
-                    borderColor
-                  )}>
-                    <GlowingEffect
-                      spread={40}
-                      glow={true}
-                      disabled={false}
-                      proximity={64}
-                      inactiveZone={0.01}
-                      borderWidth={3}
-                      isNegative={isNegative}
-                    />
-                    <div className={cn(
-                      "relative flex h-full flex-col gap-6 overflow-hidden rounded-xl border-[0.75px] p-6 shadow-sm md:p-8",
-                      isNegative 
-                        ? 'bg-[#0a0a0a] border-white/10 shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]' 
-                        : 'bg-[#E8E7E3] border-black/10'
-                    )}>
-                      <div className={cn(
-                        "w-fit rounded-lg border-[0.75px] p-3",
-                        isNegative ? 'border-white/20 bg-white/5' : 'border-black/20 bg-black/5'
-                      )}>
-                        <div className={iconColor}>
-                          {service.icon}
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <h3 className={cn(
-                          "text-xl sm:text-2xl font-semibold leading-tight",
-                          isNegative ? 'text-white' : 'text-black'
-                        )}>
-                          {service.title}
-                        </h3>
-                        <p className={cn(
-                          "text-sm sm:text-base leading-relaxed",
-                          isNegative ? 'text-white/70' : 'text-black/70'
-                        )}>
-                          {service.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <ServiceCard
+                    icon={service.icon}
+                    title={service.title}
+                    description={service.description}
+                    isNegative={isNegative}
+                  />
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className={`py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8`}>
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -327,14 +212,10 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className={`text-3xl sm:text-4xl font-bold mb-6 ${
-                isNegative ? 'text-white' : 'text-black'
-              }`}>
+              <h2 className={`text-3xl sm:text-4xl font-bold mb-6 ${textColor}`}>
                 Готовы начать?
               </h2>
-              <p className={`text-base sm:text-lg leading-relaxed mb-8 ${
-                isNegative ? 'text-white/70' : 'text-black/70'
-              }`}>
+              <p className={`text-base sm:text-lg leading-relaxed mb-8 ${lightTextColor}`}>
                 Свяжитесь со мной для обсуждения вашего проекта. Все цены определяются индивидуально в зависимости от сложности и объема работ.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
@@ -365,7 +246,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
           </div>
         </section>
 
-        <section className={`py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8`}>
+        <section className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -374,114 +255,15 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
               viewport={{ once: true }}
               className="mb-12 sm:mb-16"
             >
-              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
-                isNegative ? 'text-white' : 'text-black'
-              }`}>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${textColor}`}>
                 Примеры наших кейсов
               </h2>
-              <p className={`text-base sm:text-lg leading-relaxed ${
-                isNegative ? 'text-white/60' : 'text-black/60'
-              }`}>
+              <p className={`text-base sm:text-lg leading-relaxed ${mutedTextColor}`}>
                 Здесь представлены как независимые исследования, так и клиентские проекты.
               </p>
             </motion.div>
 
-            <div className="relative">
-              <div className="flex items-center justify-center gap-4 sm:gap-6">
-                <motion.button
-                  onClick={handlePrevCase}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={cn(
-                    "p-2 sm:p-3 rounded-lg transition-all border-[0.75px]",
-                    isNegative
-                      ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white'
-                      : 'bg-black/5 border-black/10 hover:bg-black/10 text-black'
-                  )}
-                  aria-label="Предыдущий кейс"
-                >
-                  <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                </motion.button>
-
-                <motion.div
-                  key={currentCaseIndex}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex-1 max-w-2xl"
-                >
-                  <div className={cn(
-                    "relative rounded-[1.25rem] border-[0.75px] p-2 md:rounded-[1.5rem] md:p-3",
-                    borderColor
-                  )}>
-                    <GlowingEffect
-                      spread={40}
-                      glow={true}
-                      disabled={false}
-                      proximity={64}
-                      inactiveZone={0.01}
-                      borderWidth={3}
-                      isNegative={isNegative}
-                    />
-                    <div className={cn(
-                      "relative flex flex-col gap-8 overflow-hidden rounded-xl border-[0.75px] p-6 sm:p-8 md:p-10 shadow-sm",
-                      isNegative 
-                        ? 'bg-[#0a0a0a] border-white/10 shadow-[0px_0px_27px_0px_rgba(45,45,45,0.3)]' 
-                        : 'bg-[#E8E7E3] border-black/10'
-                    )}>
-                      <div className="space-y-4">
-                        <h3 className={cn(
-                          "text-2xl sm:text-3xl font-bold",
-                          isNegative ? 'text-white' : 'text-black'
-                        )}>
-                          {casesStudies[currentCaseIndex].title}
-                        </h3>
-                        <p className={cn(
-                          "text-base sm:text-lg leading-relaxed",
-                          isNegative ? 'text-white/70' : 'text-black/70'
-                        )}>
-                          {casesStudies[currentCaseIndex].description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.button
-                  onClick={handleNextCase}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={cn(
-                    "p-2 sm:p-3 rounded-lg transition-all border-[0.75px]",
-                    isNegative
-                      ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white'
-                      : 'bg-black/5 border-black/10 hover:bg-black/10 text-black'
-                  )}
-                  aria-label="Следующий кейс"
-                >
-                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-                </motion.button>
-              </div>
-
-              <div className="flex justify-center gap-2 mt-6 sm:mt-8">
-                {casesStudies.map((_, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => setCurrentCaseIndex(index)}
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={cn(
-                      "h-2 sm:h-2.5 rounded-full transition-all duration-300",
-                      index === currentCaseIndex
-                        ? isNegative ? 'bg-white w-6 sm:w-8' : 'bg-black w-6 sm:w-8'
-                        : isNegative ? 'bg-white/30 w-2 sm:w-2.5' : 'bg-black/30 w-2 sm:w-2.5'
-                    )}
-                    aria-label={`Показать кейс ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
+            <CasesCarousel cases={casesStudies} isNegative={isNegative} />
           </div>
         </section>
       </div>

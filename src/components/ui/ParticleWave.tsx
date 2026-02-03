@@ -215,13 +215,11 @@ export const ParticleWave = forwardRef<HTMLDivElement, ParticleWaveProps>(({
       const config = configRef.current;
       const time = (Date.now() - startTime) / 1000;
 
-      // Color palettes - inverted for particle waves
-      // Dark theme: white waves (#e8e7e3)
-      const darkShadow = [0.909, 0.905, 0.890];      // #e8e7e3
-      const darkHighlight = [0.95, 0.95, 0.95];      // lighter white
-      // Light theme: dark waves (#0a0a0a)
-      const lightShadow = [0.039, 0.039, 0.039];     // #0a0a0a
-      const lightHighlight = [0.1, 0.1, 0.1];        // lighter dark
+      // Color palettes
+      const darkShadow = [0.035, 0.035, 0.043];
+      const darkHighlight = [0.055, 0.059, 0.075];
+      const lightShadow = [0.98, 0.98, 0.988];
+      const lightHighlight = [0.9, 0.9, 0.91];
 
       const colorShadow = config.isNegative ? darkShadow : lightShadow;
       const colorHighlight = config.isNegative ? darkHighlight : lightHighlight;

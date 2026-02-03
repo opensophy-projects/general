@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Globe, Zap, ShieldCheck, TrendingUp, Sparkles, BookOpen } from 'lucide-react';
 import Footer from '../Footer';
-import { ParticleWave } from '../ui/ParticleWave';
+import { SingularityShaders } from '../SingularityShaders';
 import { GlowingEffect } from '../ui/glowing-effect';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { cn } from '@/lib/utils';
@@ -144,10 +144,12 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
         {/* HERO SECTION */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
           <div className="absolute inset-0">
-            <ParticleWave
-              speed={0.5}
-              noiseScale={4.0}
-              gridSize={2.0}
+            <SingularityShaders
+              speed={1}
+              intensity={1.2}
+              size={1.1}
+              waveStrength={1}
+              colorShift={1}
               isNegative={isNegative}
               className="h-full w-full"
             />

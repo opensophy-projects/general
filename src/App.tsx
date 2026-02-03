@@ -8,6 +8,7 @@ import LoadingScreen from './components/LoadingScreen';
 
 const General = React.lazy(() => import('./components/pages/General'));
 const Contacts = React.lazy(() => import('./components/pages/Contacts'));
+const Services = React.lazy(() => import('./components/pages/Services'));
 const Menu = React.lazy(() => import('./components/Menu'));
 
 function AppContent() {
@@ -22,13 +23,15 @@ function AppContent() {
     const path = location.pathname;
     if (path === '/') return 'general';
     if (path === '/contacts') return 'contacts';
+    if (path === '/services') return 'services';
     return 'general';
   }, [location.pathname]);
 
-  const handleNavigate = React.useCallback((page: 'general' | 'contacts' | 'ui-components' | 'docs') => {
+  const handleNavigate = React.useCallback((page: 'general' | 'contacts' | 'services' | 'ui-components' | 'docs') => {
     const routes = {
       general: '/',
       contacts: '/contacts',
+      services: '/services',
       'ui-components': '',
       docs: ''
     };
@@ -92,6 +95,12 @@ function AppContent() {
             <Contacts isNegative={isNegative} />
           </React.Suspense>
         );
+      case 'services':
+        return (
+          <React.Suspense fallback={<LoadingScreen isNegative={isNegative} />}>
+            <Services isNegative={isNegative} />
+          </React.Suspense>
+        );
       default:
         return null;
     }
@@ -143,6 +152,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AppContent />} />
         <Route path="/contacts" element={<AppContent />} />
+        <Route path="/services" element={<AppContent />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

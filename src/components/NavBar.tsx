@@ -41,12 +41,13 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const NavButton: React.FC<{
     icon: React.ReactNode;
+    label: string;
     onClick: () => void;
     isActive?: boolean;
-  }> = ({ icon, onClick, isActive = false }) => (
+  }> = ({ icon, label, onClick, isActive = false }) => (
     <button
       onClick={onClick}
-      className={`w-12 h-12 flex items-center justify-center transition-colors ${
+      className={`flex flex-col items-center justify-center gap-1 px-2 py-2 transition-colors ${
         isActive
           ? isNegative
             ? 'text-white'
@@ -56,7 +57,8 @@ const NavBar: React.FC<NavBarProps> = ({
           : 'text-black/60 hover:text-black'
       }`}
     >
-      {icon}
+      <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
+      <span className="text-[10px] font-medium">{label}</span>
     </button>
   );
 
@@ -69,15 +71,17 @@ const NavBar: React.FC<NavBarProps> = ({
             : 'bg-[#E8E7E3]/95 border-black/10 backdrop-blur-sm'
         }`}
       >
-        <div className="flex items-center justify-center gap-2 px-6 py-3">
+        <div className="flex items-center justify-center gap-2 px-6 py-1">
           {/* Left side - Hamburger + Projects */}
           <div className="flex items-center gap-2">
             <NavButton 
-              icon={<Menu className="w-5 h-5" />} 
+              icon={<Menu className="w-5 h-5" />}
+              label="Меню"
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
             />
             <NavButton 
-              icon={<Folder className="w-5 h-5" />} 
+              icon={<Folder className="w-5 h-5" />}
+              label="Проекты"
               onClick={() => setIsProjectsOpen(!isProjectsOpen)} 
             />
           </div>
@@ -85,11 +89,11 @@ const NavBar: React.FC<NavBarProps> = ({
           <div className={`w-px h-8 ${isNegative ? 'bg-white/20' : 'bg-black/20'}`} />
 
           {/* Center - Logo */}
-          <a href="/" className="flex items-center justify-center px-4">
+          <a href="/" className="flex flex-col items-center justify-center gap-1 px-4 py-2">
             <img 
               src="/favicon.png" 
               alt="Opensophy" 
-              className="w-8 h-8 object-contain" 
+              className="w-7 h-7 object-contain" 
             />
           </a>
 
@@ -98,11 +102,13 @@ const NavBar: React.FC<NavBarProps> = ({
           {/* Right side - About + Theme */}
           <div className="flex items-center gap-2">
             <NavButton 
-              icon={<User className="w-5 h-5" />} 
+              icon={<User className="w-5 h-5" />}
+              label="Обо мне"
               onClick={() => handleNavigation('about')} 
             />
             <NavButton 
-              icon={isNegative ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />} 
+              icon={isNegative ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              label="Тема"
               onClick={onToggleNegative} 
             />
           </div>
@@ -139,11 +145,13 @@ const NavBar: React.FC<NavBarProps> = ({
                 }`}>Навигация</h3>
                 <button 
                   onClick={() => setIsMenuOpen(false)} 
-                  className={`p-2 rounded-lg ${
-                    isNegative ? 'hover:bg-white/10' : 'hover:bg-black/10'
+                  className={`p-2 rounded-lg transition-colors ${
+                    isNegative 
+                      ? 'text-white/70 hover:text-white active:bg-white/10' 
+                      : 'text-black/70 hover:text-black active:bg-black/10'
                   }`}
                 >
-                  <X className={isNegative ? 'text-white' : 'text-black'} />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
               <div className="p-4 space-y-2">
@@ -153,8 +161,8 @@ const NavBar: React.FC<NavBarProps> = ({
                     onClick={() => handleNavigation(item.id)}
                     className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${
                       isNegative
-                        ? 'text-white/70 hover:bg-white/5 hover:text-white'
-                        : 'text-black/70 hover:bg-black/5 hover:text-black'
+                        ? 'text-white/70 hover:text-white active:bg-white/10'
+                        : 'text-black/70 hover:text-black active:bg-black/10'
                     }`}
                   >
                     {item.icon}
@@ -202,11 +210,13 @@ const NavBar: React.FC<NavBarProps> = ({
                 }`}>Проекты</h3>
                 <button 
                   onClick={() => setIsProjectsOpen(false)} 
-                  className={`p-2 rounded-lg ${
-                    isNegative ? 'hover:bg-white/10' : 'hover:bg-black/10'
+                  className={`p-2 rounded-lg transition-colors ${
+                    isNegative 
+                      ? 'text-white/70 hover:text-white active:bg-white/10' 
+                      : 'text-black/70 hover:text-black active:bg-black/10'
                   }`}
                 >
-                  <X className={isNegative ? 'text-white' : 'text-black'} />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
               <div className="p-4 space-y-2">
@@ -216,8 +226,8 @@ const NavBar: React.FC<NavBarProps> = ({
                     onClick={() => handleNavigation(project.id, project.url)}
                     className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${
                       isNegative
-                        ? 'text-white/70 hover:bg-white/5 hover:text-white'
-                        : 'text-black/70 hover:bg-black/5 hover:text-black'
+                        ? 'text-white/70 hover:text-white active:bg-white/10'
+                        : 'text-black/70 hover:text-black active:bg-black/10'
                     }`}
                   >
                     <Package className="w-5 h-5" />

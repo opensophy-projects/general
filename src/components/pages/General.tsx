@@ -19,7 +19,7 @@ const General: React.FC<GeneralProps> = ({ isNegative }) => {
       id: 'openness',
       icon: <Cloud className="w-6 h-6" />,
       title: "Открытость",
-      description: "Все проекты и ресурсы публикуются как открытый код"
+      description: "Фокус на open-source решениях и свободных инструментах"
     },
     {
       id: 'transparency',

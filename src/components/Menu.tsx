@@ -44,6 +44,16 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
     onClose();
   };
 
+  // ИСПРАВЛЕНИЕ: Функция для определения стиля кнопки меню
+  const getMenuItemStyle = (isCurrentPage: boolean) => {
+    if (isCurrentPage) {
+      return isNegative ? 'bg-white/10 text-white' : 'bg-black/10 text-black';
+    }
+    return isNegative
+      ? 'text-white/70 hover:text-white active:bg-white/5'
+      : 'text-black/70 hover:text-black active:bg-black/5';
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -58,6 +68,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
               isNegative ? 'bg-black/50' : 'bg-white/50'
             }`}
             onClick={onClose}
+            aria-hidden="true"
           />
           
           {/* Menu content - bottom sheet */}
@@ -67,7 +78,9 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
             exit={{ opacity: 0, y: '100%' }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed bottom-0 left-0 right-0 z-50 pb-20"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="menu-title"
           >
             <div className={`rounded-t-2xl border-t max-h-[80vh] overflow-y-auto ${
               isNegative 
@@ -81,7 +94,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                   : 'bg-[#E8E7E3]/95 border-black/10'
               }`}>
                 <div>
-                  <h2 className={`text-xl font-bold ${
+                  <h2 id="menu-title" className={`text-xl font-bold ${
                     isNegative ? 'text-white' : 'text-black'
                   }`}>Навигация</h2>
                   <p className={`text-xs ${
@@ -95,7 +108,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                       ? 'text-white/70 hover:text-white active:bg-white/10' 
                       : 'text-black/70 hover:text-black active:bg-black/10'
                   }`}
-                  aria-label="Close menu"
+                  aria-label="Закрыть меню"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -103,7 +116,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
               
               {/* Menu items */}
               <div className="p-4 space-y-6">
-                {menuItems.map((section, index) => (
+                {menuItems.map((section) => (
                   <div key={section.id}>
                     <div className={`flex items-center gap-2 mb-3 px-2 ${
                       isNegative ? 'text-white/50' : 'text-black/50'
@@ -118,15 +131,7 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose, currentPage, onNavigate, i
                         <button
                           key={item.id}
                           onClick={() => handleItemClick(item.id, item.url)}
-                          className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${
-                            currentPage === item.id
-                              ? isNegative
-                                ? 'bg-white/10 text-white'
-                                : 'bg-black/10 text-black'
-                              : isNegative
-                              ? 'text-white/70 hover:text-white active:bg-white/5'
-                              : 'text-black/70 hover:text-black active:bg-black/5'
-                          }`}
+                          className={`w-full flex items-center gap-4 px-4 py-4 rounded-lg transition-colors text-left ${getMenuItemStyle(currentPage === item.id)}`}
                         >
                           <div className="flex-1">
                             <div className="font-semibold text-sm">{item.label}</div>

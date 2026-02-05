@@ -10,8 +10,15 @@ interface ServicesProps {
   isNegative: boolean;
 }
 
+interface Service {
+  id: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
 const Services: React.FC<ServicesProps> = ({ isNegative }) => {
-  const securityServices = [
+  const securityServices: Service[] = [
     {
       id: 'leak-check',
       icon: <Search className="w-6 h-6" />,
@@ -38,7 +45,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
     }
   ];
 
-  const developmentServices = [
+  const developmentServices: Service[] = [
     {
       id: 'static-website',
       icon: <Globe className="w-6 h-6" />,
@@ -80,6 +87,27 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
   const textColor = isNegative ? 'text-white' : 'text-black';
   const mutedTextColor = isNegative ? 'text-white/60' : 'text-black/60';
   const lightTextColor = isNegative ? 'text-white/70' : 'text-black/70';
+
+  const renderServices = (services: Service[], gridClassName: string) => (
+    <div className={gridClassName}>
+      {services.map((service, index) => (
+        <motion.div
+          key={service.id}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          viewport={{ once: true }}
+        >
+          <ServiceCard
+            icon={service.icon}
+            title={service.title}
+            description={service.description}
+            isNegative={isNegative}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="min-h-screen relative flex flex-col pb-20">
@@ -145,24 +173,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {securityServices.map((service, index) => (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <ServiceCard
-                    icon={service.icon}
-                    title={service.title}
-                    description={service.description}
-                    isNegative={isNegative}
-                  />
-                </motion.div>
-              ))}
-            </div>
+            {renderServices(securityServices, 'grid grid-cols-1 md:grid-cols-2 gap-6')}
           </div>
         </section>
 
@@ -183,24 +194,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {developmentServices.map((service, index) => (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <ServiceCard
-                    icon={service.icon}
-                    title={service.title}
-                    description={service.description}
-                    isNegative={isNegative}
-                  />
-                </motion.div>
-              ))}
-            </div>
+            {renderServices(developmentServices, 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6')}
           </div>
         </section>
 
@@ -219,7 +213,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                 Свяжитесь со мной для обсуждения вашего проекта. Все цены определяются индивидуально в зависимости от сложности и объема работ.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <a
+                
                   href="mailto:opensophy@gmail.com"
                   className={`inline-flex items-center gap-2 px-8 py-4 backdrop-blur-2xl border rounded-lg transition-all duration-300 font-semibold text-lg hover:scale-105 ${
                     isNegative
@@ -229,7 +223,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                 >
                   opensophy@gmail.com
                 </a>
-                <a
+                
                   href="https://t.me/veilosophy"
                   target="_blank"
                   rel="noopener noreferrer"

@@ -213,7 +213,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                 Свяжитесь со мной для обсуждения вашего проекта. Все цены определяются индивидуально в зависимости от сложности и объема работ.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                
+                <a
                   href="mailto:opensophy@gmail.com"
                   className={`inline-flex items-center gap-2 px-8 py-4 backdrop-blur-2xl border rounded-lg transition-all duration-300 font-semibold text-lg hover:scale-105 ${
                     isNegative
@@ -223,7 +223,7 @@ const Services: React.FC<ServicesProps> = ({ isNegative }) => {
                 >
                   opensophy@gmail.com
                 </a>
-                
+                <a
                   href="https://t.me/veilosophy"
                   target="_blank"
                   rel="noopener noreferrer"
